@@ -1,11 +1,10 @@
-import { createStore } from 'vuex'
+import { createStore } from 'vuex';
 
-const defaultState = {
-}
+const defaultState = {};
 
 // Create a new store instance.
 export default createStore({
   state () {
-    return defaultState
-  }
-})
+    return defaultState;
+  },
+});

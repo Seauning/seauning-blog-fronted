@@ -1,7 +1,7 @@
 <script setup>
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import HelloWorld from './components/HelloWorld.vue'
+import HelloWorld from './components/HelloWorld.vue';
 </script>
 
 <template>
@@ -11,5 +11,4 @@ import HelloWorld from './components/HelloWorld.vue'
   <el-button type="warning">警告按钮</el-button>
 </template>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
