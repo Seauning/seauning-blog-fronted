@@ -4,7 +4,7 @@ const defaultState = {};
 
 // Create a new store instance.
 export default createStore({
-  state () {
+  state() {
     return defaultState;
   },
 });
