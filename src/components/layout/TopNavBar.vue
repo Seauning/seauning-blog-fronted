@@ -25,18 +25,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$color: #666;
+$color: #fff;
+$fm: VERDANA;
 .top_nav {
-  position: fixed;
+  position: absolute;
   top: 10px;
   right: 10px;
+  z-index: 9999;
   .nav_content {
     display: flex;
     justify-content: center;
     align-items: center;
   }
 }
-
 .nav_item {
   position: relative;
   flex: 1;
@@ -59,21 +60,18 @@ $color: #666;
   .item_link {
     position: relative;
     display: block;
-
-    &:hover {
-      text-decoration: none;
-    }
-
     .iconfont {
       margin-right: 3px;
       color: $color;
       font-size: 0.16rem;
+      font-family: $fm;
       vertical-align: baseline; /*字体图标与文字基线对齐*/
     }
 
     .nav_text {
       color: $color;
       font-size: 0.15rem;
+      font-family: $fm;
     }
   }
 }

@@ -37,4 +37,7 @@ export default defineConfig({
   ],
   // 设置反向代理，跨域
   proxy: {},
+  build: {
+    outDir: 'dist', // 打包输出路径
+  },
 });

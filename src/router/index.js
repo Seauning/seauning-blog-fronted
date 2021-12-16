@@ -2,9 +2,9 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 
 // 路由懒加载
 // 将 import 组件 from '路径'替换成如下格式
-const blogHome = () => import('@/views/blog-home.vue');
-const loginFrame = () => import('@/views/blog-login.vue');
-const musicFrame = () => import('@/views/music/blog-music.vue');
+const blogHome = () => import('@/views/home/BlogHome.vue');
+const loginFrame = () => import('@/views/BlogLogin.vue');
+const musicFrame = () => import('@/views/music/BlogMusic.vue');
 
 const routes = [
   { path: '/', redirect: '/home' },
