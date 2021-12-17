@@ -1,6 +1,6 @@
 <template>
-  <div class="top_nav cl">
-    <ul class="nav_content">
+  <div class="top_nav">
+    <ul class="nav_content cl">
       <li class="nav_item"
           v-for="item in navItems"
           :key="item.id">
@@ -25,24 +25,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$color: #fff;
-$fm: VERDANA;
 .top_nav {
   position: absolute;
   top: 10px;
   right: 10px;
+  width: 100%;
+  height: 30px;
   z-index: 9999;
   .nav_content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: inline-block;
   }
 }
 .nav_item {
+  float: left;
   position: relative;
   flex: 1;
   margin-right: 0.1rem;
   padding: 0.1rem 0.1rem 0 0.1rem;
+  // 实现导航下的动态蓝条
   &::after {
     display: block;
     position: absolute;
@@ -51,7 +54,7 @@ $fm: VERDANA;
     left: 0;
     width: 0;
     height: 3px;
-    background-color: #80c8f8;
+    background-color: $color80c8f8;
     transition: all 0.3s ease-in-out;
   }
   &:hover::after {
@@ -59,19 +62,17 @@ $fm: VERDANA;
   }
   .item_link {
     position: relative;
-    display: block;
+    display: inline-block;
+    color: $themecolor;
     .iconfont {
       margin-right: 3px;
-      color: $color;
-      font-size: 0.16rem;
-      font-family: $fm;
+      font-size: 14px;
+      font-family: $ffVERDANA;
       vertical-align: baseline; /*字体图标与文字基线对齐*/
     }
-
     .nav_text {
-      color: $color;
-      font-size: 0.15rem;
-      font-family: $fm;
+      font-size: 16px;
+      font-family: $ffVERDANA;
     }
   }
 }

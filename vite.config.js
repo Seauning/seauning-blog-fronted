@@ -35,6 +35,14 @@ export default defineConfig({
     }),
     /* 以上是配置element-plus */
   ],
+  // 配置引入全局的scss变量
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: '@import "./src/assets/scss/globalVarible.scss";',
+      },
+    },
+  },
   // 设置反向代理，跨域
   proxy: {},
   build: {

@@ -14,7 +14,8 @@ body {
 
 /* 编写屏幕适应样式 */
 
-/* 设计稿大小为1500px
+/*
+    设计稿大小为1500px
     1500px = 100 vw ==> 1vw = 15px
     一般rem给浏览器100px，方便计算，将100px换算为vw
     px -> vw = 100px/15px = 6.6666vw
@@ -24,6 +25,10 @@ body {
   font-size: 6.6666vw;
 }
 
+/* 定义a标签hover颜色 */
+.a_underline {
+  transition: all 0.2s linear;
+}
 .a_underline:hover {
   color: #cd0200 !important;
 }

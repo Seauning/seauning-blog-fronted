@@ -27,7 +27,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$color: #fff;
 .main {
   position: relative;
   height: 100%;
@@ -47,9 +46,9 @@ $color: #fff;
   background-attachment: fixed; // 背景相对于视口固定
   .header_content {
     .header_text {
-      color: $color;
+      color: $themecolor;
       text-align: center;
-      font-size: 0.35rem;
+      font-size: 27px;
       font-family: Lato;
       font-weight: 600;
     }
@@ -57,8 +56,8 @@ $color: #fff;
 }
 
 .blogger_detail {
-  width: 2rem;
-  margin-top: 0.2rem;
+  width: 150px;
+  margin-top: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -66,9 +65,9 @@ $color: #fff;
     flex: 1;
     display: inline-block;
     text-align: center;
-    color: $color;
+    color: $themecolor;
     .iconfont {
-      font-size: 0.2rem;
+      font-size: 25px;
     }
   }
 }
