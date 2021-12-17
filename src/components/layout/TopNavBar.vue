@@ -44,7 +44,7 @@ export default {
   position: relative;
   flex: 1;
   margin-right: 0.1rem;
-  padding: 0.1rem 0.1rem 0 0.1rem;
+  padding: 0.1rem 0.2rem 0 0.2rem;
   // 实现导航下的动态蓝条
   &::after {
     display: block;
@@ -66,12 +66,12 @@ export default {
     color: $themecolor;
     .iconfont {
       margin-right: 3px;
-      font-size: 14px;
+      font-size: 20px;
       font-family: $ffVERDANA;
       vertical-align: baseline; /*字体图标与文字基线对齐*/
     }
     .nav_text {
-      font-size: 16px;
+      font-size: 20px;
       font-family: $ffVERDANA;
     }
   }

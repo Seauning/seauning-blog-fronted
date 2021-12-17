@@ -2,7 +2,7 @@
   <!-- 博客动态 -->
   <el-card>
     <template #header>
-      <div class="card-header">
+      <div class="card-header hover-shadow">
         <span>博客</span>
       </div>
     </template>
@@ -28,16 +28,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// $colorfff: #fff;
-// $color666: #666;
-// $coloreccc: #ccc;
-// $colorebbb: #bbb;
-// $color0e83d1: #0e83d1;
-// $color6ab3cc: #6ab3cc;
-// $fw400: 400;
-// $fw600: 600;
-// $ffYahei: 'Miscrosoft YaHei';
-// $ffLato: Lato;
 .el-card {
   display: inline-block;
   .card-header {
@@ -45,10 +35,6 @@ export default {
     font-size: 0.2rem;
     font-weight: 600;
   }
-}
-
-.el-card__body {
-  padding: 0.1rem !important;
 }
 
 .home_blogs {
