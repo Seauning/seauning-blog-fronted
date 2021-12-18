@@ -18,9 +18,6 @@
 export default {
   name: 'TopNavBar',
   props: ['navItems'],
-  methods: {
-
-  },
 };
 </script>
 
@@ -44,7 +41,6 @@ export default {
   position: relative;
   flex: 1;
   margin-right: 0.1rem;
-  padding: 0.1rem 0.2rem 0 0.2rem;
   // 实现导航下的动态蓝条
   &::after {
     display: block;
@@ -62,7 +58,8 @@ export default {
   }
   .item_link {
     position: relative;
-    display: inline-block;
+    display: block;
+    padding: 0.1rem 0.2rem 0 0.2rem;
     color: $themecolor;
     .iconfont {
       margin-right: 3px;

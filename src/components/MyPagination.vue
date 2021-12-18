@@ -39,25 +39,29 @@
 </template>
 
 <script>
+import { toRefs } from 'vue';
+
 export default {
   name: 'MyPagination',
   props: {
-    totalPage: {
+    totalSize: {
       type: Number,
-      default: 10,
+      required: true,
     },
-    disabled: {
-      type: Number,
-      default: 1,
-    },
-    currentPage: {
-      type: Number,
-      default: 1,
-    },
+  },
+  setup(props) {
+    // 通过toRefs使其不失去响应性
+    const { totalSize } = toRefs(props);
+    const totalPage = Math.ceil(totalSize.value / 3);
+    return { totalPage };
   },
   data() {
     return {
-      current: this.currentPage,
+      current: 1,
+      disabled: {
+        type: Number,
+        default: 1,
+      },
     };
   },
   methods: {
