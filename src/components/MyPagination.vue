@@ -4,29 +4,33 @@
     <!-- 前进按钮 -->
     <div class="paginator">
       <button type="button"
-              :class="['btn-prev', disabled === 0? 'fobid' : '']"
+              :class="['btn-prev', current === 1? 'fobid' : '']"
               @click="changePage(-1)">
         <i class="iconfont icon-left"></i>
       </button>
       <ul class="pagination_pages">
-        <li :class="['pagination_e', current === 1?'active': '']">1
+        <li :class="['pagination_e', current === 1?'active': '']"
+            @click="selectPage(1)">1
         </li>
-        <li :class="['pagination_e', current === 2?'active': '']">2
+        <li :class="['pagination_e', current === 2?'active': '']"
+            @click="selectPage(2)">2
         </li>
-        <li :class="['pagination_e', current === 3?'active': '']">3
+        <li :class="['pagination_e', current === 3?'active': '']"
+            @click="selectPage(3)">3
         </li>
-        <li :class="['pagination_e', current === 4?'active': '']">4
+        <li :class="['pagination_e', current === 4?'active': '']"
+            @click="selectPage(4)">4
         </li>
       </ul>
       <!-- 后退按钮 -->
       <button type="button"
-              :class="['btn-prev', disabled === 1? 'fobid' : '']"
+              :class="['btn-prev', current === 4? 'fobid' : '']"
               @click="changePage(1)">
         <i class="iconfont icon-right"></i>
       </button>
     </div>
     <span class="pagination_jump">
-      <span>Go to</span>
+      <span>跳转到</span>
       <input type="text"
              class="pagination_editor"
              v-model.number="current">
@@ -58,9 +62,13 @@ export default {
   },
   methods: {
     changePage(v) {
-      if (this.current > 0) {
+      if ((v < 0 && this.current > 1 && this.current <= 4)
+        || (v > 0 && this.current > 0 && this.current < 4)) {
         this.current += v;
       }
+    },
+    selectPage(v) {
+      this.current = v;
     },
   },
 };
@@ -72,6 +80,7 @@ export default {
   justify-content: space-around;
   align-items: center;
   font-size: 30px;
+  font-family: $ffYahei;
   .pagination__total {
     color: #444;
     font-size: 0.9em;
@@ -93,8 +102,10 @@ export default {
       font-weight: 500;
       font-family: VERDANA;
       cursor: pointer;
+      transition: all 0.2s linear;
       &.active {
-        color: #0e83d1;
+        color: #3fc5f1;
+      }
       &:hover {
         color: #6ab3cc;
       }
@@ -103,10 +114,9 @@ export default {
 }
 
 .pagination_jump {
-  // display: inline-block;
   height: 2em;
   line-height: 2em;
-  font-size: 28px;
+  font-size: 24px;
   span {
     vertical-align: top;
     margin-right: 10px;
@@ -120,7 +130,6 @@ export default {
     text-align: center;
     font-size: 20px;
     vertical-align: middle;
-
     outline: none;
     outline-color: #dcdfe6;
     transition: all 0.2s linear;
@@ -139,7 +148,7 @@ export default {
     font-size: 25px;
   }
   .pagination_jump {
-    font-size: 25px;
+    font-size: 20px;
   }
 }
 
@@ -148,7 +157,7 @@ export default {
     font-size: 20px;
   }
   .pagination_jump {
-    font-size: 20px;
+    display: none;
   }
 }
 </style>

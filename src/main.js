@@ -14,6 +14,8 @@ import '@/assets/css/normalize.css';
 import '@/assets/css/global.css';
 // 引入字体图标
 import '@/assets/fonts/iconfont.css';
+// 引入animate.css
+import 'animate.css';
 
 // 注册全局的组件BlogRecord(博客备案)
 // import BlogRecord from '@/components/layout/BlogRecord.vue';

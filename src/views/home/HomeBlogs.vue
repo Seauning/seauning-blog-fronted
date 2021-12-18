@@ -32,7 +32,7 @@ export default {
   display: inline-block;
   .card-header {
     color: skyblue;
-    font-size: 0.2rem;
+    font-size: 20px;
     font-weight: 600;
   }
 }
@@ -46,6 +46,6 @@ export default {
 }
 
 .card_footer {
-  padding-top: 0.333rem;
+  padding-top: 0.24rem;
 }
 </style>
