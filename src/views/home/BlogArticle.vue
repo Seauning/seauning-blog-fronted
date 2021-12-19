@@ -5,7 +5,11 @@
          class="a_underline">
         <div class="article_content">
           <h1 class="article_title">入站须知</h1>
-          <div class="article_desc">
+          <div class="article_desc text_moh">
+            如何获取源码地址？入站有什么注意事项?进来便知!
+            如何获取源码地址？入站有什么注意事项?进来便知!
+            如何获取源码地址？入站有什么注意事项?进来便知!
+            如何获取源码地址？入站有什么注意事项?进来便知!
             如何获取源码地址？入站有什么注意事项?进来便知!
             如何获取源码地址？入站有什么注意事项?进来便知!
             如何获取源码地址？入站有什么注意事项?进来便知!

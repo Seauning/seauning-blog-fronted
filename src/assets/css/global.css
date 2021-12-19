@@ -111,3 +111,21 @@ html::selection {
 .btn-next.fobid:hover {
   cursor: not-allowed;
 }
+
+.text_soh,
+.text_moh {
+  /* 文字省略 */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 超过1行省略 */
+.text_soh {
+  -webkit-line-clamp: 1;
+}
+
+/* 超过3行省略 */
+.text_moh {
+  -webkit-line-clamp: 3;
+}

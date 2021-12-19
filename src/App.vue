@@ -1,7 +1,7 @@
 <script setup>
-import { reactive } from 'vue';
 import TopNavBar from '@/components/layout/TopNavBar.vue';
 
+// 导航栏列表无需响应
 const navItems = [
   {
     id: 0, name: '首页', url: '/home', icon: 'icon-shouye',
@@ -14,12 +14,10 @@ const navItems = [
   },
 ];
 
-const data = reactive({ navItems });
-
 </script>
 
 <template>
-  <top-nav-bar :navItems="data.navItems"></top-nav-bar>
+  <top-nav-bar :navItems="navItems"></top-nav-bar>
   <router-view></router-view>
 </template>
 

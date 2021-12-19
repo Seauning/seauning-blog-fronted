@@ -9,22 +9,15 @@
         <i class="iconfont icon-left"></i>
       </button>
       <ul class="pagination_pages">
-        <li :class="['pagination_e', current === 1?'active': '']"
-            @click="selectPage(1)">1
-        </li>
-        <li :class="['pagination_e', current === 2?'active': '']"
-            @click="selectPage(2)">2
-        </li>
-        <li :class="['pagination_e', current === 3?'active': '']"
-            @click="selectPage(3)">3
-        </li>
-        <li :class="['pagination_e', current === 4?'active': '']"
-            @click="selectPage(4)">4
+        <li v-for="(p, i) in totalPage"
+            :key="i"
+            :class="['pagination_e', current === p?'active': '']"
+            @click="current = p">{{p}}
         </li>
       </ul>
       <!-- 后退按钮 -->
       <button type="button"
-              :class="['btn-prev', current === 4? 'fobid' : '']"
+              :class="['btn-prev', current === totalPage? 'fobid' : '']"
               @click="changePage(1)">
         <i class="iconfont icon-right"></i>
       </button>
@@ -33,16 +26,17 @@
       <span>跳转到</span>
       <input type="text"
              class="pagination_editor"
-             v-model.number="current">
+             v-model.number.lazy="current">
     </span>
   </div>
 </template>
 
 <script>
-import { toRefs } from 'vue';
+import { inject, toRefs, watch } from 'vue';
 
 export default {
   name: 'MyPagination',
+  // 如果需要响应式的变量如current，改变如下方法为2的方法
   props: {
     totalSize: {
       type: Number,
@@ -50,14 +44,19 @@ export default {
     },
   },
   setup(props) {
-    // 通过toRefs使其不失去响应性
+    // 1.如果需要结构props通过toRefs使其不失去响应性，转化为ref后响应访问它的值需要通过.value
     const { totalSize } = toRefs(props);
     const totalPage = Math.ceil(totalSize.value / 3);
-    return { totalPage };
+    // 2.在父组件中使用protect在子组件中使用inject可以实现父向子响应式传值(在子组件中更改值父组件也会改变)
+    const current = inject('current');
+    watch(current, (newV, oldV) => {
+      console.log(newV, oldV);
+    });
+    // 这里返回的current虽然时ref但是会自动解包所以在templates中无需.value
+    return { totalPage, current };
   },
   data() {
     return {
-      current: 1,
       disabled: {
         type: Number,
         default: 1,
@@ -66,13 +65,10 @@ export default {
   },
   methods: {
     changePage(v) {
-      if ((v < 0 && this.current > 1 && this.current <= 4)
-        || (v > 0 && this.current > 0 && this.current < 4)) {
+      if ((v < 0 && this.current > 1 && this.current <= this.totalPage)
+        || (v > 0 && this.current > 0 && this.current < this.totalPage)) {
         this.current += v;
       }
-    },
-    selectPage(v) {
-      this.current = v;
     },
   },
 };
