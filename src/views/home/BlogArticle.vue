@@ -119,7 +119,8 @@ export default {
   align-items: center;
   font-size: 0.16rem;
   .left_wrap {
-    width: 68.75%;
+    display: inline-block;
+    cursor: pointer;
     height: 100%;
     font-family: $ffYahei;
     font-weight: 400;

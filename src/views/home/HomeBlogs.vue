@@ -6,12 +6,12 @@
       <span class="">共<span class="number">{{articles.length}}</span>篇</span>
     </div>
     <div class="home_blogs hover-shadow">
-      <blog-article></blog-article>
-      <blog-article></blog-article>
-      <blog-article></blog-article>
+      <blog-article v-for="(item, i) in pageSize"
+                    :key="i"></blog-article>
     </div>
     <div class="card_footer hover-shadow">
-      <my-pagination :totalSize="articles.length"></my-pagination>
+      <my-pagination :totalSize="articles.length"
+                     @getPageSize="getPageSize"></my-pagination>
     </div>
   </div>
 </template>
@@ -29,9 +29,15 @@ export default {
     // 用ref创建原始值的响应对象，用reactive创建[],{}的响应对象
     const current = ref(1);
     provide('current', current);
+    const pageSize = ref(0);
+    const getPageSize = (data) => {
+      pageSize.value = data.value;
+    };
     // 想要在当前页面到的templates中使用的数据记得返回，否则templates找不到
     return {
       articles,
+      pageSize,
+      getPageSize,
     };
   },
   components: {
@@ -43,6 +49,7 @@ export default {
 <style lang="scss" scoped>
 .my_card {
   width: 68.75%;
+  margin: 0 auto;
   border-radius: 5px;
   background-color: #fff;
   .card_header {
@@ -66,14 +73,6 @@ export default {
   box-sizing: border-box;
   &:hover {
     border: 20px;
-  }
-}
-
-.hover-shadow {
-  border-radius: 5px;
-  transition: all 0.1s linear;
-  &:hover {
-    box-shadow: 0 0 5px 5px #ededed;
   }
 }
 

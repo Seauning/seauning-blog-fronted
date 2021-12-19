@@ -56,18 +56,6 @@ export default {
   }
 }
 
-// 定义头部进入时的动画
-@keyframes header-effect {
-  0% {
-    opacity: 0;
-    transform: translateY(-50 px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .blogger_detail {
   width: 280px;
   margin-top: 15px;
@@ -90,13 +78,12 @@ export default {
 .home_mess {
   padding-top: 105vh;
   padding-bottom: 0;
-  padding-left: 1.8rem;
 }
 
 @media screen and(max-width:746px) {
   .home_mess {
-    padding-left: 30px;
-    padding-right: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 }
 </style>
