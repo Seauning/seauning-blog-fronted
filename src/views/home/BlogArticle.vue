@@ -5,7 +5,7 @@
          class="a_underline">
         <div class="article_content">
           <h1 class="article_title">入站须知</h1>
-          <div class="article_desc text_moh">
+          <div class="article_desc text_soh">
             如何获取源码地址？入站有什么注意事项?进来便知!
             如何获取源码地址？入站有什么注意事项?进来便知!
             如何获取源码地址？入站有什么注意事项?进来便知!
@@ -64,59 +64,69 @@ export default {
   display: flex;
   justify-content: space-between;
   width: 100%;
+  height: 100%;
   box-sizing: border-box;
-  padding: 0.24rem 0;
-  padding-bottom: 0.24rem;
+  padding: 0.16rem 0;
   border-bottom: 1px solid #e4e7ed;
-
   .blog_article {
-    width: 5rem;
-    padding-right: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 68.75%;
+    height: 100%;
+    margin-right: 30px;
   }
   .img_wrap {
-    overflow: hidden;
-    width: 3rem;
-    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    width: 31.25%;
     box-sizing: border-box;
-    img {
+    a {
+      display: block;
       width: 100%;
       height: 2rem;
     }
+    .image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 5px;
+    }
   }
 }
-
 .blog_article {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   .article_content {
     font-family: $ffYahei;
+    margin-bottom: 80px;
     .article_title {
-      font-size: 22px;
+      font-size: 26px;
       font-weight: 800;
       margin-bottom: 20px;
     }
     .article_desc {
       color: $color666;
       font-size: 16px;
+      margin-bottom: 20px;
     }
   }
 }
-
 .user_info {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 50px;
-  line-height: 50px;
-  font-size: 16px;
+  font-size: 0.16rem;
   .left_wrap {
+    width: 68.75%;
+    height: 100%;
     font-family: $ffYahei;
     font-weight: 400;
     .iconfont {
       margin-left: 10px;
       margin-right: 5px;
-      font-size: 14px;
+      font-size: 0.2rem;
       color: $color666;
     }
     .article_date {
@@ -140,6 +150,9 @@ export default {
   }
 
   .right_wrap {
+    width: 31.25%;
+    height: 100%;
+    text-align: right;
     transition: all 0.3s linear;
     .article_tag {
       display: inline;
@@ -156,33 +169,27 @@ export default {
   }
 }
 
-@media screen and(max-width:1300px) {
+@media screen and(max-width:746px) {
   .blog_item {
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+    padding: 0 0 20px 0;
     .blog_article {
       width: 100%;
+      margin-right: 0;
+      .article_content {
+        margin-bottom: 20px;
+      }
     }
     .img_wrap {
-      display: none;
+      width: 100%;
+      padding: 20px 0;
+      margin-bottom: 10px;
+      a {
+        height: 8rem;
+      }
     }
-  }
-}
-
-@media screen and(max-width:952px) {
-  .blog_item {
-    .right_wrap {
-      display: none;
-    }
-  }
-}
-
-@media screen and(max-width:660px) {
-  .article_date_wrap {
-    .article_date {
-      font-size: 0.36rem;
-    }
-  }
-  .article_views_wrap {
-    display: none;
   }
 }
 </style>

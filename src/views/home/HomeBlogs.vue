@@ -1,20 +1,19 @@
 <template>
   <!-- 博客动态 -->
-  <el-card>
-    <template #header>
-      <div class="card-header hover-shadow">
-        <span>博客</span>
-      </div>
-    </template>
-    <div class="home_blogs cl">
+  <div class="my_card">
+    <div class="card_header hover-shadow">
+      <span class="title">博客</span>
+      <span class="">共<span class="number">{{articles.length}}</span>篇</span>
+    </div>
+    <div class="home_blogs hover-shadow">
       <blog-article></blog-article>
       <blog-article></blog-article>
       <blog-article></blog-article>
     </div>
-    <div class="card_footer">
+    <div class="card_footer hover-shadow">
       <my-pagination :totalSize="articles.length"></my-pagination>
     </div>
-  </el-card>
+  </div>
 </template>
 
 <script>
@@ -42,24 +41,55 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-card {
-  display: inline-block;
-  .card-header {
+.my_card {
+  width: 68.75%;
+  border-radius: 5px;
+  background-color: #fff;
+  .card_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    padding: 0.2rem;
+    border-bottom: 1px solid #d4d4d5;
+    font-size: 24px;
     color: skyblue;
-    font-size: 20px;
-    font-weight: 600;
+    box-sizing: border-box;
+    .title {
+      font-weight: 600;
+    }
+  }
+}
+.home_blogs {
+  width: 100%;
+  padding: 0.2rem 0.2rem 0 0.2rem;
+  box-sizing: border-box;
+  &:hover {
+    border: 20px;
   }
 }
 
-.home_blogs {
-  display: flex;
-  justify-content: flex-start;
-  align-content: center;
-  flex-wrap: wrap;
-  width: 8rem;
+.hover-shadow {
+  border-radius: 5px;
+  transition: all 0.1s linear;
+  &:hover {
+    box-shadow: 0 0 5px 5px #ededed;
+  }
+}
+
+@media screen and(max-width:746px) {
+  .my_card {
+    width: 100%;
+    .card_header {
+      padding: 0.3rem;
+    }
+    .home_blogs {
+      padding: 0 0.4rem 0 0.4rem;
+    }
+  }
 }
 
 .card_footer {
-  padding-top: 0.24rem;
+  padding: 0.1rem;
 }
 </style>

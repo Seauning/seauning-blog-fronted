@@ -92,4 +92,11 @@ export default {
   padding-bottom: 0;
   padding-left: 1.8rem;
 }
+
+@media screen and(max-width:746px) {
+  .home_mess {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
 </style>
