@@ -28,7 +28,7 @@ export default {
   right: 10px;
   width: 100%;
   height: 30px;
-  z-index: 9999;
+  z-index: 2000;
   .nav_content {
     position: absolute;
     top: 0;

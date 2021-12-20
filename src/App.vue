@@ -17,9 +17,14 @@ const navItems = [
 </script>
 
 <template>
-  <top-nav-bar :navItems="navItems"></top-nav-bar>
-  <router-view></router-view>
+  <div class="app">
+    <top-nav-bar :navItems="navItems"></top-nav-bar>
+    <router-view></router-view>
+  </div>
 </template>
 
 <style lang="scss" scoped>
+.app {
+  position: relative;
+}
 </style>

@@ -26,16 +26,16 @@ body {
 }
 
 /* 配置滚动条 */
-html::-webkit-scrollbar {
-  width: 10px;
-  /* height: 10px; */
+::-webkit-scrollbar {
+  width: 8px;
+  /* height: 8px; */
 }
 
-html::-webkit-scrollbar-corner {
+::-webkit-scrollbar-corner {
   background-color: transparent;
 }
 
-html::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background-color: #ff3300;
   background-image: -webkit-linear-gradient(
     45deg,
@@ -50,18 +50,14 @@ html::-webkit-scrollbar-thumb {
   border-radius: 2em;
 }
 
-html::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background-color: rgba(248, 190, 0, 0.2);
   border-radius: 2em;
 }
 
-html::selection {
+::selection {
   background-color: #fdf47b;
   color: rgba(0, 0, 0, 0.87);
-}
-
-.main {
-  padding-top: 150px;
 }
 
 /* 定义a标签hover颜色 */
