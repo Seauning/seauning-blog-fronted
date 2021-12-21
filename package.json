@@ -7,6 +7,7 @@
     "preview": "vite preview --port 8081"
   },
   "dependencies": {
+    "@element-plus/icons": "0.0.11",
     "@vitejs/plugin-vue": "^2.0.0",
     "animate.css": "^4.1.1",
     "axios": "^0.24.0",
