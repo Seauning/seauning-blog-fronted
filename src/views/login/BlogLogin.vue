@@ -1,7 +1,7 @@
 <template>
   <div class="main">
-    <login-dialog v-model="formRules"></login-dialog>
-    <register-dialog v-model:formRules="formRules"></register-dialog>
+    <login-dialog :formRules="formRules"></login-dialog>
+    <register-dialog :formRules="formRules"></register-dialog>
   </div>
 </template>
 

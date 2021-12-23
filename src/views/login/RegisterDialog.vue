@@ -29,7 +29,7 @@
           <el-form-item prop="phone"
                         label="手机号">
             <el-input v-model="registerForm.phone"
-                      placeholder="请输入phone"></el-input>
+                      placeholder="请输入手机号"></el-input>
           </el-form-item>
           <!-- 验证码 -->
           <el-form-item prop="emVerifyCode"
@@ -89,7 +89,7 @@ export default {
   components: {
     UploadFilled,
   },
-  setup(props, ctx) {
+  setup(props) {
     const registerVisible = inject('registerVisible');
     const registerForm = reactive({
       username: '',
@@ -125,7 +125,7 @@ export default {
       validator: checkUserCount,
       trigger: 'blur',
     });
-    ctx.emit('update:formRules', formRules);
+    // ctx.emit('update:formRules', formRules);
 
     // 获取图形验证码
     const getVerifyCode = () => {
