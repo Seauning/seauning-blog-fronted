@@ -1,7 +1,7 @@
 <template>
   <div class="main">
-    <login-dialog :formRules="formRules"></login-dialog>
-    <register-dialog :formRules="formRules"></register-dialog>
+    <login-dialog v-model="formRules"></login-dialog>
+    <register-dialog v-model:formRules="formRules"></register-dialog>
   </div>
 </template>
 
@@ -23,7 +23,7 @@ export default {
       username: [
         { required: true, message: '请输入登录名称', trigger: 'blur' },
         {
-          min: 1, max: 12, message: '长度在 1 到 12 个字符', trigger: 'blur',
+          min: 2, max: 6, message: '长度在 2 到 6 个字符', trigger: 'blur',
         },
       ],
       // 验证密码是否合法
@@ -33,11 +33,11 @@ export default {
           min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur',
         },
       ],
-      // 邮箱
-      email: [
-        { required: true, message: '请输入邮箱', trigger: 'blur' },
+      // 手机号
+      phone: [
+        { required: true, message: '请输入手机号', trigger: 'blur' },
         {
-          message: '长度在 3 到 15 个字符', trigger: 'blur',
+          min: 11, max: 11, message: '长度为11位', trigger: 'blur',
         },
       ],
       // 图片验证码

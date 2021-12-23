@@ -25,11 +25,11 @@
                       placeholder="请输入密码"
                       type="password"></el-input>
           </el-form-item>
-          <!-- 邮箱 -->
-          <el-form-item prop="email"
-                        label="邮箱">
-            <el-input v-model="registerForm.email"
-                      placeholder="请输入邮箱"></el-input>
+          <!-- 手机号 -->
+          <el-form-item prop="phone"
+                        label="手机号">
+            <el-input v-model="registerForm.phone"
+                      placeholder="请输入phone"></el-input>
           </el-form-item>
           <!-- 验证码 -->
           <el-form-item prop="emVerifyCode"
@@ -77,7 +77,9 @@
 <script>
 // 引入element的icon
 import { UploadFilled } from '@element-plus/icons';
-import { reactive, inject } from 'vue';
+import {
+  reactive, inject, toRefs, getCurrentInstance,
+} from 'vue';
 
 export default {
   name: 'RegisterDialog',
@@ -87,12 +89,12 @@ export default {
   components: {
     UploadFilled,
   },
-  setup() {
+  setup(props, ctx) {
     const registerVisible = inject('registerVisible');
     const registerForm = reactive({
       username: '',
       password: '',
-      email: '',
+      phone: '',
       emVerifyCode: '',
       registerVisible: false,
       fileList: [
@@ -106,6 +108,25 @@ export default {
         },
       ],
     });
+    const { formRules } = toRefs(props);
+    const { proxy } = getCurrentInstance();
+    const checkUserCount = async (rule, value, callback) => {
+      const { data: res } = await proxy.$http.get(`/usernames/${value}/count/`);
+      if (res.code === 0) {
+        if (res.count !== 0) {
+          return callback(new Error('用户名已被注册'));
+        }
+      } else {
+        return callback(new Error('服务器响应错误'));
+      }
+      return true;
+    };
+    formRules.value.username.push({
+      validator: checkUserCount,
+      trigger: 'blur',
+    });
+    ctx.emit('update:formRules', formRules);
+
     // 获取图形验证码
     const getVerifyCode = () => {
       console.log(1);
