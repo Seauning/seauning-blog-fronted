@@ -78,7 +78,7 @@
 // 引入element的icon
 import { UploadFilled } from '@element-plus/icons';
 import {
-  reactive, inject, toRefs, getCurrentInstance,
+  reactive, inject,
 } from 'vue';
 
 export default {
@@ -89,7 +89,7 @@ export default {
   components: {
     UploadFilled,
   },
-  setup(props) {
+  setup() {
     const registerVisible = inject('registerVisible');
     const registerForm = reactive({
       username: '',
@@ -108,24 +108,6 @@ export default {
         },
       ],
     });
-    const { formRules } = toRefs(props);
-    const { proxy } = getCurrentInstance();
-    const checkUserCount = async (rule, value, callback) => {
-      const { data: res } = await proxy.$http.get(`/usernames/${value}/count/`);
-      if (res.code === 0) {
-        if (res.count !== 0) {
-          return callback(new Error('用户名已被注册'));
-        }
-      } else {
-        return callback(new Error('服务器响应错误'));
-      }
-      return true;
-    };
-    formRules.value.username.push({
-      validator: checkUserCount,
-      trigger: 'blur',
-    });
-    // ctx.emit('update:formRules', formRules);
 
     // 获取图形验证码
     const getVerifyCode = () => {
