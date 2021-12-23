@@ -17,10 +17,12 @@ export default {
     RegisterDialog,
   },
   setup() {
+    // 如果想访问到项目的app实例，需要通过getCurrentInstance()获取
+    // 通过解构出proxy可以访问app的$data，$emit，$nextTick，$options，$parent，$props，$ref，$slots，$watch等属性
     const { proxy } = getCurrentInstance();
     // 添加用户名规则检测用户是否存在
     const checkUserCount = async (rule, value, callback) => {
-      const { data: res } = await proxy.$http.get(`/usernames/${value}/count/`);
+      const res = await proxy.$http.get(`/usernames/${value}/count/`);
       if (res.code === 0) {
         if (res.count !== 0) {
           return callback(new Error('用户名已被注册'));
@@ -32,12 +34,12 @@ export default {
     };
     // 添加手机号规则检测手机号是否存在
     const checkPhoneCount = async (rule, value, callback) => {
-      const { data: res } = await proxy.$http.get(`/phones/${value}/count/`);
+      const res = await proxy.$http.get(`/phones/${value}/count/`);
       if (res.code === 0) {
         if (res.count !== 0) {
           return callback(new Error('手机号已被注册'));
         }
-      } else if (res.code === 1) {
+      } else if (res.code === 400) {
         return callback(new Error('手机号格式错误'));
       } else {
         return callback(new Error('服务器响应错误'));

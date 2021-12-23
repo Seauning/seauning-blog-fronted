@@ -9,6 +9,7 @@
         <el-form ref="registerFormRef"
                  :model="registerForm"
                  :rules="formRules"
+                 :auto-upload="false"
                  label-position="top"
                  label-width="80px"
                  class="rigister_form">
@@ -32,12 +33,12 @@
                       placeholder="请输入手机号"></el-input>
           </el-form-item>
           <!-- 验证码 -->
-          <el-form-item prop="emVerifyCode"
+          <el-form-item prop="verifyCode"
                         label="验证码">
-            <el-input v-model="registerForm.emVerifyCode"
+            <el-input v-model="registerForm.verifyCode"
                       placeholder="请输入验证码">
               <template #append>
-                <el-button>
+                <el-button @click="getVerifyCode">
                   获取验证码
                 </el-button>
               </template>
@@ -46,10 +47,10 @@
           <el-form-item label="选择本地图片作头像">
             <el-upload class="avatar_uploader"
                        drag
-                       action="http://localhost:8081"
+                       action="http://localhost:8082/upload/avatar/"
                        list-type="picture"
                        :limit="1"
-                       :on-preview="handlePreview"
+                       :on-success="handleAvatarSuccess"
                        :on-exceed="warnOverLimit"
                        :on-remove="handleRemove"
                        :file-list="registerForm.fileList">
@@ -78,7 +79,7 @@
 // 引入element的icon
 import { UploadFilled } from '@element-plus/icons';
 import {
-  reactive, inject,
+  reactive, inject, getCurrentInstance,
 } from 'vue';
 
 export default {
@@ -95,60 +96,82 @@ export default {
       username: '',
       password: '',
       phone: '',
-      emVerifyCode: '',
+      verifyCode: '',
       registerVisible: false,
-      fileList: [
-        {
-          name: 'food.jpeg',
-          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-        },
-        {
-          name: 'food2.jpeg',
-          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
-        },
-      ],
+      fileList: [],
     });
-
-    // 获取图形验证码
+    const { proxy } = getCurrentInstance();
+    // 获取手机验证码
     const getVerifyCode = () => {
-      console.log(1);
+      // 在表单项中进行手机号校验
+      proxy.$refs.registerFormRef.validateField('phone', async (pass) => {
+        const phoneValidRes = pass === ''; // 判断是否通过验证
+        if (!phoneValidRes) {
+          return false;
+        }
+        const res = await proxy.$http.get(`/sms_codes/${registerForm.phone}/`);
+        if (res.code === 400 && res.errmsg === 'phone format err') {
+          return false;
+        }
+        return true;
+      });
+    };
+
+    // 头像上传成功
+    const handleAvatarSuccess = (res, file) => {
+      if (res.code === 0) {
+        registerForm.fileList.push(file);
+      }
+    };
+
+    // 提示图片数量超过1张
+    const warnOverLimit = () => {
+      console.log('最多上传一张图片');
+    };
+
+    // 移除图像
+    const handleRemove = (file) => {
+      registerForm.fileList.splice(registerForm.fileList.indexOf(file), 1);
+    };
+
+    // 注册
+    const handleRegister = async () => {
+      // const formValidRes = await proxy.$refs.registerFormRef.validate();
+      // 注意：validate()方法里面为空时，会返回一个Promise，验证通过返回true，
+      // 但是验证不通过会报异常进入默认的catch，无法执行下一行，所以要自定义catch方法，返回验证结果；
+      const formValidRes = await proxy.$refs.registerFormRef.validate().catch((err) => err);
+      if (!formValidRes) { // 不通过校验
+        return false;
+      }
+      console.log(registerForm.fileList);
+      const res = await proxy.$http.post('/register/', {
+        username: registerForm.username,
+        password: registerForm.password,
+        phone: registerForm.phone,
+        verifyCode: registerForm.verifyCode,
+        avatar: registerForm.fileList[0] || '',
+      });
+      if (res.code === 0) {
+        console.log('注册成功');
+      } else {
+        switch (res.errmsg) {
+          case 'params err': console.log(1); break;
+          default:
+            console.log(2);
+        }
+      }
+
+      return true;
     };
     return {
       registerVisible,
       registerForm,
       getVerifyCode,
+      handleAvatarSuccess,
+      warnOverLimit,
+      handleRemove,
+      handleRegister,
     };
-  },
-  methods: {
-    // 头像上传成功
-    handleAvatarSuccess(res, file, fileList) {
-      fileList.push({
-        name: file.name,
-        url: file.url,
-      });
-      console.log(fileList);
-    },
-    // 提示图片数量超过1张
-    warnOverLimit() {
-      console.log('最多上传一张图片');
-    },
-    // 移除图像
-    handleRemove() {
-      this.registerForm.fileList.pop();
-    },
-    // 点击已上传图片
-    handlePreview(file) {
-      console.log(file);
-    },
-    // 注册
-    handleRegister() {
-      this.$refs.registerFormRef.validate((pass) => {
-        if (!pass) {
-          return false;
-        }
-        return true;
-      });
-    },
   },
 };
 </script>
