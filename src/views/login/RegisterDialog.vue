@@ -33,12 +33,12 @@
                       placeholder="请输入手机号"></el-input>
           </el-form-item>
           <!-- 验证码 -->
-          <el-form-item prop="verifyCode"
+          <el-form-item prop="smsVerifyCode"
                         label="验证码">
-            <el-input v-model="registerForm.verifyCode"
+            <el-input v-model="registerForm.smsVerifyCode"
                       placeholder="请输入验证码">
               <template #append>
-                <el-button @click="getVerifyCode">
+                <el-button @click="getsmsVerifyCode">
                   获取验证码
                 </el-button>
               </template>
@@ -98,13 +98,13 @@ export default {
       username: '',
       password: '',
       phone: '',
-      verifyCode: '',
+      smsVerifyCode: '',
       registerVisible: false,
       fileList: [],
     });
     const { proxy } = getCurrentInstance();
     // 获取手机验证码
-    const getVerifyCode = () => {
+    const getsmsVerifyCode = () => {
       // 在表单项中进行手机号校验
       proxy.$refs.registerFormRef.validateField('phone', async (pass) => {
         const phoneValidRes = pass === ''; // 判断是否通过验证
@@ -113,14 +113,21 @@ export default {
         }
         const { code } = await proxy.$http.get(`/sms_codes/${registerForm.phone}/`);
         if (code === 400) {
+          console.log('手机号为空');
           return false;
         }
+        if (code === 500) {
+          console.log('验证码发送失败，请尝试重新发送');
+          return false;
+        }
+
         return true;
       });
     };
+    // 头像上传前的校验
     const onBeforeUploadAvatar = (file) => {
       const fileType = file.type;
-      const isImg = fileType.indexOf('image') !== -1;
+      const isImg = fileType.indexOf('image') !== -1; // 判断是否是图像
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isLt2M) {
         console.log('图片大小不能超过2MB');
@@ -139,9 +146,9 @@ export default {
       // 2.图片上传
       const form = new FormData();
       form.append('file', file);
-      const { code, errmsg, data } = await proxy.$http.post('/upload/avatar/', form);
+      const { code, data } = await proxy.$http.post('/upload/avatar/', form);
       if (code !== 0) {
-        console.log(errmsg);
+        console.log('上传失败，请尝试重新上传');
       }
       // 将头像载入临时数组
       proxy.$refs.upload.clearFiles();
@@ -166,21 +173,46 @@ export default {
       if (formValidRes !== true) { // 不通过校验
         return false;
       }
-      const { code, errmsg } = await proxy.$http.post('/register/', {
+      const { code, msg } = await proxy.$http.post('/register/', {
         username: registerForm.username,
         password: registerForm.password,
         phone: registerForm.phone,
-        verifyCode: registerForm.verifyCode,
+        smsVerifyCode: registerForm.smsVerifyCode,
         avatar: registerForm.fileList[0] || '',
       });
       if (code !== 0) {
-        switch (errmsg) {
-          case 'params err':
-            console.log(1);
-            return false;
-          default:
-            return false;
+        if (code === 400) {
+          switch (msg) {
+            case 'pars err':
+              console.log('参数错误');
+              break;
+            case 'uname fmt err':
+              console.log('用户名格式错误');
+              break;
+            case 'uname mtpl':
+              console.log('用户名重复');
+              break;
+            case 'passwd fmt err':
+              console.log('密码格式错误');
+              break;
+            case 'phone fmt err':
+              console.log('手机号格式错误');
+              break;
+            case 'phone mtpl':
+              console.log('手机号重复');
+              break;
+            case 'valid dead':
+              console.log('验证码失效');
+              break;
+            case 'valid err':
+              console.log('验证码错误');
+              break;
+            default:
+          }
+        } else {
+          console.log('注册失败，请尝试重新注册');
         }
+        return false;
       }
       console.log('注册成功');
       return true;
@@ -188,7 +220,7 @@ export default {
     return {
       registerVisible,
       registerForm,
-      getVerifyCode,
+      getsmsVerifyCode,
       uploadAvatar,
       onBeforeUploadAvatar,
       warnOverLimit,

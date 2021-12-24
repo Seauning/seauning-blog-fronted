@@ -22,27 +22,29 @@ export default {
     const { proxy } = getCurrentInstance();
     // 添加用户名规则检测用户是否存在
     const checkUserCount = async (rule, value, callback) => {
-      const res = await proxy.$http.get(`/usernames/${value}/count/`);
-      if (res.code === 0) {
-        if (res.count !== 0) {
+      const { code, data } = await proxy.$http.get(`/usernames/${value}/count/`);
+      if (code === 0) {
+        if (data.count !== 0) {
           return callback(new Error('用户名已被注册'));
         }
+      } else if (code === 400) {
+        return callback(new Error('用户名格式错误'));
       } else {
-        return callback(new Error('服务器响应错误'));
+        return callback(new Error('服务器响应错误，请检测网络'));
       }
       return true;
     };
     // 添加手机号规则检测手机号是否存在
     const checkPhoneCount = async (rule, value, callback) => {
-      const res = await proxy.$http.get(`/phones/${value}/count/`);
-      if (res.code === 0) {
-        if (res.count !== 0) {
+      const { code, data } = await proxy.$http.get(`/phones/${value}/count/`);
+      if (code === 0) {
+        if (data.count !== 0) {
           return callback(new Error('手机号已被注册'));
         }
-      } else if (res.code === 400) {
+      } else if (code === 400) {
         return callback(new Error('手机号格式错误'));
       } else {
-        return callback(new Error('服务器响应错误'));
+        return callback(new Error('服务器响应错误，请检测网络'));
       }
       return true;
     };
@@ -67,7 +69,7 @@ export default {
       phone: [
         { required: true, message: '请输入手机号', trigger: 'blur' },
         {
-          min: 11, max: 11, message: '请输入长度为11位的手机号', trigger: 'blur',
+          min: 11, max: 11, message: '请输入正确格式，长度为11位', trigger: 'blur',
         },
         { validator: checkPhoneCount, trigger: 'blur' },
       ],
@@ -75,9 +77,12 @@ export default {
       verifyCode: [
         { required: true, message: '请输入验证码', trigger: 'blur' },
       ],
-      // 邮箱验证码
-      emVerifyCode: [
-        { required: true, message: '请输入验证码', trigger: 'blur' },
+      // 手机验证码
+      smsVerifyCode: [
+        { required: true, message: '请输入手机验证码', trigger: 'blur' },
+        {
+          min: 6, max: 6, message: '请输入正确格式', trigger: 'blur',
+        },
       ],
 
     };

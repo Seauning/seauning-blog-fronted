@@ -82,6 +82,7 @@ export default {
       validImg: '',
       verifyCode: '',
     });
+    // 获取当前的app实例，并从中解构出proxy
     const { proxy } = getCurrentInstance();
     // 重置表单
     const resetLoginForm = async () => {
