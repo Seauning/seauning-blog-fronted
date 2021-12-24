@@ -2,7 +2,7 @@
 import Axios from 'axios';
 import { ElMessage } from 'element-plus';
 
-const baseURL = 'http://localhost:8082';
+const baseURL = 'http://localhost:8082/api';
 
 const axios = Axios.create({
   baseURL,

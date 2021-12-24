@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { inject, reactive } from 'vue';
+import { getCurrentInstance, inject, reactive } from 'vue';
 
 export default {
   name: 'LoginDialog',
@@ -82,29 +82,30 @@ export default {
       validImg: '',
       verifyCode: '',
     });
+    const { proxy } = getCurrentInstance();
+    // 重置表单
+    const resetLoginForm = async () => {
+      await proxy.$refs.loginFormRef.resetFields();
+    };
+    // 获取邮箱验证码
+    const getEmVerifyCode = () => {
+      console.log(1);
+    };
+    // 登录
+    const handleLogin = async () => {
+      const res = await proxy.$refs.loginFormRef.validate().catch((err) => err);
+      if (res !== true) {
+        return false;
+      }
+      return true;
+    };
     return {
       registerVisible,
       loginForm,
+      resetLoginForm,
+      getEmVerifyCode,
+      handleLogin,
     };
-  },
-  methods: {
-    // 重置表单
-    resetLoginForm() {
-      this.$refs.loginFormRef.resetFields();
-    },
-    // 获取邮箱验证码
-    getEmVerifyCode() {
-      console.log(1);
-    },
-    // 登录
-    handleLogin() {
-      this.$refs.loginFormRef.validate((pass) => {
-        if (!pass) {
-          return false;
-        }
-        return true;
-      });
-    },
   },
 };
 </script>

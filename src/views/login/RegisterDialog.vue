@@ -46,11 +46,13 @@
           </el-form-item>
           <el-form-item label="选择本地图片作头像">
             <el-upload class="avatar_uploader"
+                       ref="upload"
                        drag
-                       action="http://localhost:8082/upload/avatar/"
+                       action="#"
                        list-type="picture"
                        :limit="1"
-                       :on-success="handleAvatarSuccess"
+                       :before-upload="onBeforeUploadAvatar"
+                       :http-request="uploadAvatar"
                        :on-exceed="warnOverLimit"
                        :on-remove="handleRemove"
                        :file-list="registerForm.fileList">
@@ -109,26 +111,47 @@ export default {
         if (!phoneValidRes) {
           return false;
         }
-        const res = await proxy.$http.get(`/sms_codes/${registerForm.phone}/`);
-        if (res.code === 400 && res.errmsg === 'phone format err') {
+        const { code } = await proxy.$http.get(`/sms_codes/${registerForm.phone}/`);
+        if (code === 400) {
           return false;
         }
         return true;
       });
     };
-
-    // 头像上传成功
-    const handleAvatarSuccess = (res, file) => {
-      if (res.code === 0) {
-        registerForm.fileList.push(file);
+    const onBeforeUploadAvatar = (file) => {
+      const fileType = file.type;
+      const isImg = fileType.indexOf('image') !== -1;
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isLt2M) {
+        console.log('图片大小不能超过2MB');
+        return Promise.reject();
       }
+      if (!isImg) {
+        console.log('请选择图片文件');
+        return Promise.reject();
+      }
+      return isImg && isLt2M;
     };
-
+    // 自定义上传头像
+    const uploadAvatar = async (params) => {
+      // 1.图片处理
+      const { file } = params;
+      // 2.图片上传
+      const form = new FormData();
+      form.append('file', file);
+      const { code, errmsg, data } = await proxy.$http.post('/upload/avatar/', form);
+      if (code !== 0) {
+        console.log(errmsg);
+      }
+      // 将头像载入临时数组
+      proxy.$refs.upload.clearFiles();
+      registerForm.fileList.push({ name: file.name, url: data.url });
+      return data;
+    };
     // 提示图片数量超过1张
     const warnOverLimit = () => {
       console.log('最多上传一张图片');
     };
-
     // 移除图像
     const handleRemove = (file) => {
       registerForm.fileList.splice(registerForm.fileList.indexOf(file), 1);
@@ -140,34 +163,34 @@ export default {
       // 注意：validate()方法里面为空时，会返回一个Promise，验证通过返回true，
       // 但是验证不通过会报异常进入默认的catch，无法执行下一行，所以要自定义catch方法，返回验证结果；
       const formValidRes = await proxy.$refs.registerFormRef.validate().catch((err) => err);
-      if (!formValidRes) { // 不通过校验
+      if (formValidRes !== true) { // 不通过校验
         return false;
       }
-      console.log(registerForm.fileList);
-      const res = await proxy.$http.post('/register/', {
+      const { code, errmsg } = await proxy.$http.post('/register/', {
         username: registerForm.username,
         password: registerForm.password,
         phone: registerForm.phone,
         verifyCode: registerForm.verifyCode,
         avatar: registerForm.fileList[0] || '',
       });
-      if (res.code === 0) {
-        console.log('注册成功');
-      } else {
-        switch (res.errmsg) {
-          case 'params err': console.log(1); break;
+      if (code !== 0) {
+        switch (errmsg) {
+          case 'params err':
+            console.log(1);
+            return false;
           default:
-            console.log(2);
+            return false;
         }
       }
-
+      console.log('注册成功');
       return true;
     };
     return {
       registerVisible,
       registerForm,
       getVerifyCode,
-      handleAvatarSuccess,
+      uploadAvatar,
+      onBeforeUploadAvatar,
       warnOverLimit,
       handleRemove,
       handleRegister,
