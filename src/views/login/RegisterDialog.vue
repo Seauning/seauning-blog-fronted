@@ -3,7 +3,8 @@
     <el-dialog custom-class="register_dialog"
                title="注册用户"
                center
-               v-model="registerVisible">
+               v-model="registerVisible"
+               @close="closeRegisterDialog">
       <div class="register_box">
         <!-- 注册表单区域 -->
         <el-form ref="registerFormRef"
@@ -14,9 +15,9 @@
                  label-width="80px"
                  class="rigister_form">
           <!-- 用户名 -->
-          <el-form-item prop="username"
+          <el-form-item prop="regusername"
                         label="用户名">
-            <el-input v-model="registerForm.username"
+            <el-input v-model="registerForm.regusername"
                       placeholder="请输入用户名"></el-input>
           </el-form-item>
           <!-- 密码 -->
@@ -89,7 +90,7 @@
 // 引入element的icon
 import { UploadFilled, Loading } from '@element-plus/icons';
 import {
-  reactive, inject, getCurrentInstance, ref,
+  reactive, getCurrentInstance, ref, inject,
 } from 'vue';
 import { getSmscodeApi, postUploadAvatarApi, postRegisterUserApi } from '@/api/registerApi.js';
 
@@ -103,16 +104,15 @@ export default {
     Loading,
   },
   setup() {
-    let timer = null; // 计时器
     const registerVisible = inject('registerVisible');
+    let timer = null; // 计时器
     const restTime = ref(0); // 计时器中的时间
     const isDisabled = ref(false); // 发送短信按钮是否禁用
     const registerForm = reactive({
-      username: '',
+      regregusername: '',
       password: '',
       phone: '',
       smsVerifyCode: '',
-      registerVisible: false,
       fileList: [],
     });
     const { proxy } = getCurrentInstance(); // 当前实例
@@ -218,7 +218,7 @@ export default {
         return false;
       }
       const { code, msg } = await postRegisterUserApi(
-        registerForm.username,
+        registerForm.regusername,
         registerForm.password,
         registerForm.phone,
         registerForm.smsVerifyCode,
@@ -275,10 +275,10 @@ export default {
       proxy.$refs.registerFormRef.resetFields();
     };
     return {
-      registerVisible,
       isDisabled,
       restTime,
       registerForm,
+      registerVisible,
       getsmsVerifyCode,
       uploadAvatar,
       onBeforeUploadAvatar,

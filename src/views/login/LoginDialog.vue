@@ -12,8 +12,8 @@
                label-width="0px"
                class="login_form">
         <!-- 用户名 -->
-        <el-form-item prop="username">
-          <el-input v-model="loginForm.username"
+        <el-form-item prop="logusername">
+          <el-input v-model="loginForm.logusername"
                     placeholder="请输入用户名"
                     prefix-icon="el-icon"></el-input>
           <span class="icon_wrap">
@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { getCurrentInstance, inject, reactive } from 'vue';
+import { getCurrentInstance, reactive, inject } from 'vue';
 
 export default {
   name: 'LoginDialog',
@@ -77,7 +77,7 @@ export default {
     const registerVisible = inject('registerVisible');
     // 这是登录表单的数据绑定对象
     const loginForm = reactive({
-      username: '',
+      logusername: '',
       password: '',
       validImg: '',
       verifyCode: '',
@@ -101,8 +101,8 @@ export default {
       return true;
     };
     return {
-      registerVisible,
       loginForm,
+      registerVisible,
       resetLoginForm,
       getVerifyCode,
       handleLogin,

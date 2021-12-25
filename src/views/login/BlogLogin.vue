@@ -51,9 +51,16 @@ export default {
     };
     // 这是表单的验证规则对象
     const formRules = {
-      // 验证用户名是否合法
-      username: [
-        { required: true, message: '请输入登录名称', trigger: 'blur' },
+      // 验证注册用户名是否合法
+      logusername: [
+        { required: true, message: '请输入用户名', trigger: 'blur' },
+        {
+          min: 2, max: 6, message: '长度在 2 到 6 个字符', trigger: 'blur',
+        },
+      ],
+      // 验证注册用户名是否合法
+      regusername: [
+        { required: true, message: '请输入用户名', trigger: 'blur' },
         {
           min: 2, max: 6, message: '长度在 2 到 6 个字符', trigger: 'blur',
         },
@@ -85,7 +92,6 @@ export default {
           min: 6, max: 6, message: '请输入正确格式', trigger: 'blur',
         },
       ],
-
     };
     const registerVisible = ref(false);
     provide('registerVisible', registerVisible);
