@@ -6,7 +6,8 @@
 </template>
 
 <script>
-import { ref, provide, getCurrentInstance } from 'vue';
+import { ref, provide } from 'vue';
+import { getUsernameCountApi, getPhoneCountApi } from '@/api/registerApi.js';
 import LoginDialog from '@/views/login/LoginDialog.vue';
 import RegisterDialog from '@/views/login/RegisterDialog.vue';
 
@@ -19,10 +20,10 @@ export default {
   setup() {
     // 如果想访问到项目的app实例，需要通过getCurrentInstance()获取
     // 通过解构出proxy可以访问app的$data，$emit，$nextTick，$options，$parent，$props，$ref，$slots，$watch等属性
-    const { proxy } = getCurrentInstance();
+    // const { proxy } = getCurrentInstance();
     // 添加用户名规则检测用户是否存在
     const checkUserCount = async (rule, value, callback) => {
-      const { code, data } = await proxy.$http.get(`/usernames/${value}/count/`);
+      const { code, data } = await getUsernameCountApi(value);
       if (code === 0) {
         if (data.count !== 0) {
           return callback(new Error('用户名已被注册'));
@@ -36,7 +37,7 @@ export default {
     };
     // 添加手机号规则检测手机号是否存在
     const checkPhoneCount = async (rule, value, callback) => {
-      const { code, data } = await proxy.$http.get(`/phones/${value}/count/`);
+      const { code, data } = await getPhoneCountApi(value);
       if (code === 0) {
         if (data.count !== 0) {
           return callback(new Error('手机号已被注册'));

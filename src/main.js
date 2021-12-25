@@ -7,7 +7,8 @@ import router from './router/index';
 // 引入vuex
 import store from './store/index';
 // 引入axios
-import axios from './utils/axios';
+// import axios from './utils/axios'; // 将axios请求全部封装在相应的组件中
+// app.config.globalProperties.$http = axios;
 // 引入normalize.css重置浏览器样式
 import '@/assets/css/normalize.css';
 // 引入全局样式
@@ -23,7 +24,6 @@ import 'animate.css';
 
 const app = createApp(App);
 
-app.config.globalProperties.$http = axios;
 // app.component(BlogRecord.name, BlogRecord);
 // app.component(MyPagination.name, MyPagination);
 

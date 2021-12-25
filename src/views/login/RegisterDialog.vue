@@ -83,6 +83,7 @@ import { UploadFilled } from '@element-plus/icons';
 import {
   reactive, inject, getCurrentInstance,
 } from 'vue';
+import { getSmscodeApi, postUploadAvatarApi, postRegisterUserApi } from '@/api/registerApi.js';
 
 export default {
   name: 'RegisterDialog',
@@ -111,7 +112,7 @@ export default {
         if (!phoneValidRes) {
           return false;
         }
-        const { code } = await proxy.$http.get(`/sms_codes/${registerForm.phone}/`);
+        const { code } = await getSmscodeApi(registerForm.phone);
         if (code === 400) {
           console.log('手机号为空');
           return false;
@@ -146,7 +147,7 @@ export default {
       // 2.图片上传
       const form = new FormData();
       form.append('file', file);
-      const { code, data } = await proxy.$http.post('/upload/avatar/', form);
+      const { code, data } = await postUploadAvatarApi(form);
       if (code !== 0) {
         console.log('上传失败，请尝试重新上传');
       }
@@ -163,7 +164,6 @@ export default {
     const handleRemove = (file) => {
       registerForm.fileList.splice(registerForm.fileList.indexOf(file), 1);
     };
-
     // 注册
     const handleRegister = async () => {
       // const formValidRes = await proxy.$refs.registerFormRef.validate();
@@ -173,13 +173,13 @@ export default {
       if (formValidRes !== true) { // 不通过校验
         return false;
       }
-      const { code, msg } = await proxy.$http.post('/register/', {
-        username: registerForm.username,
-        password: registerForm.password,
-        phone: registerForm.phone,
-        smsVerifyCode: registerForm.smsVerifyCode,
-        avatar: registerForm.fileList[0] || '',
-      });
+      const { code, msg } = await postRegisterUserApi(
+        registerForm.username,
+        registerForm.password,
+        registerForm.phone,
+        registerForm.smsVerifyCode,
+        registerForm.fileList[0] || '',
+      );
       if (code !== 0) {
         if (code === 400) {
           switch (msg) {

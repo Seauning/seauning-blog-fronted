@@ -27,5 +27,6 @@ module.exports = {
       },
     ],
     'vue/comment-directive': 'off', // 允许在标签中写注释
+    'import/extensions': ['error', { js: 'nerver', vue: 'nerver' }], // 允许import后缀为.js的文件
   },
 };
