@@ -6,6 +6,8 @@ import App from './App.vue';
 import router from './router/index';
 // 引入vuex
 import store from './store/index';
+// 引入util中的Message
+import { Message } from './utils/tool';
 // 引入axios
 // import axios from './utils/axios'; // 将axios请求全部封装在相应的组件中
 // app.config.globalProperties.$http = axios;
@@ -18,13 +20,7 @@ import '@/assets/fonts/iconfont.css';
 // 引入animate.css
 import 'animate.css';
 
-// 注册全局的组件BlogRecord(博客备案)
-// import BlogRecord from '@/components/layout/BlogRecord.vue';
-// import MyPagination from '@/components/MyPagination.vue';
-
 const app = createApp(App);
-
-// app.component(BlogRecord.name, BlogRecord);
-// app.component(MyPagination.name, MyPagination);
+app.config.globalProperties.Message = Message;
 
 app.use(router).use(store).mount('#app');

@@ -1,9 +1,8 @@
 /* eslint-disable implicit-arrow-linebreak */
 import Axios from 'axios';
-import { ElMessage } from 'element-plus';
+import { Message } from './tool';
 
 const baseURL = 'http://localhost:8082/api';
-
 const request = Axios.create({
   baseURL,
   timeout: 5000, // 请求超时 5s
@@ -36,10 +35,15 @@ request.interceptors.response.use(
     if (error.response && error.response.data) {
       const code = error.response.status; // 响应状态码如404,400等
       const msg = error.response.data.message; // 错误信息
-      ElMessage.error(`Code: ${code}, Message: ${msg}`);
-      // console.error('[Axios Error]', error.response);
+      Message({
+        message: `Code: ${code}, Message: ${msg}`,
+        type: 'error',
+      });
     } else {
-      ElMessage.error(`${error}`);
+      Message({
+        message: `${error}`,
+        type: 'error',
+      });
     }
     return Promise.reject(error);
   },

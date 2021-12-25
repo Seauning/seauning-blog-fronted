@@ -38,8 +38,16 @@
             <el-input v-model="registerForm.smsVerifyCode"
                       placeholder="请输入验证码">
               <template #append>
-                <el-button @click="getsmsVerifyCode">
-                  获取验证码
+                <el-button @click="getsmsVerifyCode"
+                           :disabled="isDisabled">
+                  <span class="verify_text"
+                        v-if="restTime === 0">获取验证码</span>
+                  <span class="verify_time"
+                        v-else>剩余{{restTime}}秒
+                    <el-icon class="is-loading">
+                      <loading />
+                    </el-icon>
+                  </span>
                 </el-button>
               </template>
             </el-input>
@@ -67,7 +75,7 @@
           <!-- 按钮区域 -->
           <el-form-item class="btns">
             <el-button type="default"
-                       @click="registerVisible = false">取消</el-button>
+                       @click="closeRegisterDialog">取消</el-button>
             <el-button type="primary"
                        @click="handleRegister">确定</el-button>
           </el-form-item>
@@ -79,9 +87,9 @@
 
 <script>
 // 引入element的icon
-import { UploadFilled } from '@element-plus/icons';
+import { UploadFilled, Loading } from '@element-plus/icons';
 import {
-  reactive, inject, getCurrentInstance,
+  reactive, inject, getCurrentInstance, ref,
 } from 'vue';
 import { getSmscodeApi, postUploadAvatarApi, postRegisterUserApi } from '@/api/registerApi.js';
 
@@ -92,9 +100,13 @@ export default {
   },
   components: {
     UploadFilled,
+    Loading,
   },
   setup() {
+    let timer = null; // 计时器
     const registerVisible = inject('registerVisible');
+    const restTime = ref(0); // 计时器中的时间
+    const isDisabled = ref(false); // 发送短信按钮是否禁用
     const registerForm = reactive({
       username: '',
       password: '',
@@ -103,7 +115,20 @@ export default {
       registerVisible: false,
       fileList: [],
     });
-    const { proxy } = getCurrentInstance();
+    const { proxy } = getCurrentInstance(); // 当前实例
+    // 计时器
+    const startInterval = () => {
+      clearInterval(timer); // 先清一遍除计时器
+      isDisabled.value = true;
+      restTime.value = 60;
+      timer = setInterval(() => { // 开启计时器
+        restTime.value -= 1;
+        if (restTime.value === 0) {
+          clearInterval(timer); // 到时间后清除计时器
+          isDisabled.value = false;
+        }
+      }, 1000);
+    };
     // 获取手机验证码
     const getsmsVerifyCode = () => {
       // 在表单项中进行手机号校验
@@ -114,14 +139,21 @@ export default {
         }
         const { code } = await getSmscodeApi(registerForm.phone);
         if (code === 400) {
-          console.log('手机号为空');
+          proxy.Message({
+            message: '手机号为空',
+            type: 'warning',
+          });
           return false;
         }
         if (code === 500) {
-          console.log('验证码发送失败，请尝试重新发送');
+          proxy.Message({
+            message: '验证码发送失败，请尝试重新发送',
+            type: 'error',
+          });
           return false;
         }
-
+        // 当手机号码发送成功后开启倒计时
+        startInterval();
         return true;
       });
     };
@@ -131,11 +163,17 @@ export default {
       const isImg = fileType.indexOf('image') !== -1; // 判断是否是图像
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isLt2M) {
-        console.log('图片大小不能超过2MB');
+        proxy.Message({
+          message: '图片大小不能超过2MB',
+          type: 'warning',
+        });
         return Promise.reject();
       }
       if (!isImg) {
-        console.log('请选择图片文件');
+        proxy.Message({
+          message: '请选择图片文件',
+          type: 'warning',
+        });
         return Promise.reject();
       }
       return isImg && isLt2M;
@@ -149,7 +187,10 @@ export default {
       form.append('file', file);
       const { code, data } = await postUploadAvatarApi(form);
       if (code !== 0) {
-        console.log('上传失败，请尝试重新上传');
+        proxy.Message({
+          message: '上传失败，请尝试重新上传',
+          type: 'error',
+        });
       }
       // 将头像载入临时数组
       proxy.$refs.upload.clearFiles();
@@ -158,7 +199,10 @@ export default {
     };
     // 提示图片数量超过1张
     const warnOverLimit = () => {
-      console.log('最多上传一张图片');
+      proxy.Message({
+        message: '最多上传一张图片',
+        type: 'warning',
+      });
     };
     // 移除图像
     const handleRemove = (file) => {
@@ -182,43 +226,58 @@ export default {
       );
       if (code !== 0) {
         if (code === 400) {
+          let message = '';
           switch (msg) {
             case 'pars err':
-              console.log('参数错误');
+              message = '参数错误';
               break;
             case 'uname fmt err':
-              console.log('用户名格式错误');
+              message = '用户名格式错误';
               break;
             case 'uname mtpl':
-              console.log('用户名重复');
+              message = '用户名重复';
               break;
             case 'passwd fmt err':
-              console.log('密码格式错误');
+              message = '密码格式错误';
               break;
             case 'phone fmt err':
-              console.log('手机号格式错误');
+              message = '手机号格式错误';
               break;
             case 'phone mtpl':
-              console.log('手机号重复');
+              message = '手机号格式错误';
               break;
             case 'valid dead':
-              console.log('验证码失效');
+              message = '验证码失效';
               break;
             case 'valid err':
-              console.log('验证码错误');
+              message = '验证码错误';
               break;
             default:
           }
+          proxy.Message({
+            message,
+            type: 'warning',
+          });
         } else {
-          console.log('注册失败，请尝试重新注册');
+          proxy.Message({
+            message: '注册失败，请尝试重新注册',
+            type: 'error',
+          });
         }
         return false;
       }
       console.log('注册成功');
       return true;
     };
+    // 关闭注册对话框
+    const closeRegisterDialog = () => {
+      registerVisible.value = false;
+      proxy.$refs.registerFormRef.resetFields();
+    };
     return {
       registerVisible,
+      isDisabled,
+      restTime,
       registerForm,
       getsmsVerifyCode,
       uploadAvatar,
@@ -226,6 +285,7 @@ export default {
       warnOverLimit,
       handleRemove,
       handleRegister,
+      closeRegisterDialog,
     };
   },
 };
@@ -239,7 +299,7 @@ export default {
 // 通过:deep(选择器)对element-plus中的样式进行修改
 :deep(.register_dialog) {
   width: 11rem;
-  margin-top: 10px;
+  margin-top: 60px;
   .el-dialog__body {
     padding-top: 0px;
     padding-bottom: 10px;
@@ -262,6 +322,8 @@ export default {
     }
     .el-form-item:nth-of-type(4) {
       .el-input-group__append {
+        width: 73px;
+        height: 38px;
         background-color: #fff;
       }
     }
@@ -274,7 +336,7 @@ export default {
     .el-upload-dragger {
       width: 100%;
       height: 100px;
-      .el-icon {
+      .el-icon--upload {
         margin: 20px 0 0 0;
         color: skyblue;
         vertical-align: bottom;

@@ -85,11 +85,11 @@ export default {
     // 获取当前的app实例，并从中解构出proxy
     const { proxy } = getCurrentInstance();
     // 重置表单
-    const resetLoginForm = async () => {
-      await proxy.$refs.loginFormRef.resetFields();
+    const resetLoginForm = () => {
+      proxy.$refs.loginFormRef.resetFields();
     };
-    // 获取邮箱验证码
-    const getEmVerifyCode = () => {
+    // 获取图片验证码
+    const getVerifyCode = () => {
       console.log(1);
     };
     // 登录
@@ -104,7 +104,7 @@ export default {
       registerVisible,
       loginForm,
       resetLoginForm,
-      getEmVerifyCode,
+      getVerifyCode,
       handleLogin,
     };
   },
