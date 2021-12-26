@@ -18,5 +18,3 @@ export const Loading = (options) => {
     background: 'rgba(0, 0, 0, 0.7)',
   });
 };
-
-export const fuc = () => { };

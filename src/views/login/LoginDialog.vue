@@ -54,7 +54,7 @@
         <!-- 按钮区域 -->
         <el-form-item class="btns">
           <el-button type="success"
-                     @click="registerVisible = true">注册</el-button>
+                     @click="changeRegisterVisible(true)">注册</el-button>
           <el-button type="primary"
                      @click="handleLogin">登录</el-button>
           <el-button type="info"
@@ -74,7 +74,7 @@ export default {
     formRules: {},
   },
   setup() {
-    const registerVisible = inject('registerVisible');
+    const changeRegisterVisible = inject('changeRegisterVisible');
     // 这是登录表单的数据绑定对象
     const loginForm = reactive({
       logusername: '',
@@ -102,7 +102,7 @@ export default {
     };
     return {
       loginForm,
-      registerVisible,
+      changeRegisterVisible,
       resetLoginForm,
       getVerifyCode,
       handleLogin,

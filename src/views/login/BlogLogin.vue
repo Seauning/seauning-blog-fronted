@@ -95,6 +95,9 @@ export default {
     };
     const registerVisible = ref(false);
     provide('registerVisible', registerVisible);
+    provide('changeRegisterVisible', (val) => {
+      registerVisible.value = val;
+    });
     return {
       formRules,
     };

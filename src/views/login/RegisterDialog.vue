@@ -2,6 +2,7 @@
   <div class="blog_register">
     <el-dialog custom-class="register_dialog"
                title="注册用户"
+               top="10vh"
                center
                v-model="registerVisible"
                @close="closeRegisterDialog">
@@ -104,7 +105,9 @@ export default {
     Loading,
   },
   setup() {
+    // 因为我们不希望在子组件中修改注册表单，所以需要在父组件传入一个change方法用于改变注册表单的显示状态
     const registerVisible = inject('registerVisible');
+    const changeRegisterVisible = inject('changeRegisterVisible'); // 更改注册会话显示状态的方法
     let timer = null; // 计时器
     const restTime = ref(0); // 计时器中的时间
     const isDisabled = ref(false); // 发送短信按钮是否禁用
@@ -119,8 +122,8 @@ export default {
     // 计时器
     const startInterval = () => {
       clearInterval(timer); // 先清一遍除计时器
-      isDisabled.value = true;
-      restTime.value = 60;
+      isDisabled.value = true; // 禁用按钮
+      restTime.value = 60; // 初始化时间
       timer = setInterval(() => { // 开启计时器
         restTime.value -= 1;
         if (restTime.value === 0) {
@@ -271,7 +274,7 @@ export default {
     };
     // 关闭注册对话框
     const closeRegisterDialog = () => {
-      registerVisible.value = false;
+      changeRegisterVisible(false);
       proxy.$refs.registerFormRef.resetFields();
     };
     return {
@@ -299,7 +302,6 @@ export default {
 // 通过:deep(选择器)对element-plus中的样式进行修改
 :deep(.register_dialog) {
   width: 11rem;
-  margin-top: 60px;
   .el-dialog__body {
     padding-top: 0px;
     padding-bottom: 10px;
