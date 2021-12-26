@@ -7,7 +7,7 @@
 
 <script>
 import { ref, provide } from 'vue';
-import { getUsernameCountApi, getPhoneCountApi } from '@/api/registerApi.js';
+import { getUsernameCountApi, getPhoneCountApi } from '@/api/loginApi.js';
 import LoginDialog from '@/views/login/LoginDialog.vue';
 import RegisterDialog from '@/views/login/RegisterDialog.vue';
 
@@ -51,18 +51,18 @@ export default {
     };
     // 这是表单的验证规则对象
     const formRules = {
-      // 验证注册用户名是否合法
+      // 验证登录用户名是否合法
       logusername: [
         { required: true, message: '请输入用户名', trigger: 'blur' },
         {
-          min: 2, max: 6, message: '长度在 2 到 6 个字符', trigger: 'blur',
+          min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur',
         },
       ],
       // 验证注册用户名是否合法
       regusername: [
         { required: true, message: '请输入用户名', trigger: 'blur' },
         {
-          min: 2, max: 6, message: '长度在 2 到 6 个字符', trigger: 'blur',
+          min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur',
         },
         { validator: checkUserCount, trigger: 'blur' },
       ],
@@ -83,13 +83,14 @@ export default {
       ],
       // 图片验证码
       verifyCode: [
-        { required: true, message: '请输入验证码', trigger: 'blur' },
+        {
+          required: true, min: 4, max: 4, message: '请输入4位的图片验证码', trigger: 'blur',
+        },
       ],
       // 手机验证码
       smsVerifyCode: [
-        { required: true, message: '请输入手机验证码', trigger: 'blur' },
         {
-          min: 6, max: 6, message: '请输入正确格式', trigger: 'blur',
+          required: true, min: 6, max: 6, message: '请输入6位的手机验证码', trigger: 'blur',
         },
       ],
     };

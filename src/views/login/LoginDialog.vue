@@ -47,9 +47,10 @@
                     placeholder="请输入验证码"
                     prefix-icon="el-icon"
                     style="width: 50%"></el-input>
-          <img src="../../assets/imgs/valid.png"
+          <img :src="loginForm.validImg"
                @click="getVerifyCode()"
-               style="float: right;cursor:pointer;" />
+               style="float: right;cursor:pointer;"
+               alt="验证码" />
         </el-form-item>
         <!-- 按钮区域 -->
         <el-form-item class="btns">
@@ -66,7 +67,11 @@
 </template>
 
 <script>
-import { getCurrentInstance, reactive, inject } from 'vue';
+import {
+  getCurrentInstance, reactive, inject, onMounted, onUnmounted,
+} from 'vue';
+import { getUUID } from '@/utils/tool';
+import { getImgCodeApi, postCheckUserApi } from '@/api/loginApi.js';
 
 export default {
   name: 'LoginDialog',
@@ -74,6 +79,17 @@ export default {
     formRules: {},
   },
   setup() {
+    // 获取图片的次数
+    let getImgCounts = 0;
+    // 禁止获取图像验证码的倒计时
+    let forbidGetTimer = null;
+    // 系统自动刷新图片验证码的定时器
+    let flushValidImgTimer = null;
+    // 图片验证码的uuid，用于比较图片验证码
+    let uuid = '';
+    // 获取当前的app实例，并从中解构出proxy
+    const { proxy } = getCurrentInstance();
+    // 禁止获取图片
     const changeRegisterVisible = inject('changeRegisterVisible');
     // 这是登录表单的数据绑定对象
     const loginForm = reactive({
@@ -82,22 +98,88 @@ export default {
       validImg: '',
       verifyCode: '',
     });
-    // 获取当前的app实例，并从中解构出proxy
-    const { proxy } = getCurrentInstance();
     // 重置表单
     const resetLoginForm = () => {
       proxy.$refs.loginFormRef.resetFields();
     };
-    // 获取图片验证码
-    const getVerifyCode = () => {
-      console.log(1);
+    // 开启禁止获取图片验证码的计时器
+    const startForbidGetImgTimer = () => {
+      clearTimeout(forbidGetTimer);
+      function reset() {
+        getImgCounts = 0 && clearTimeout(forbidGetTimer);
+      }
+      // 禁用3秒的获取图片验证码
+      forbidGetTimer = setTimeout(reset, 3000); // 此处不能加()否则会立即执行函数体里的内容
     };
+    // 获取图片验证码
+    const getVerifyCode = async () => {
+      if (forbidGetTimer != null && getImgCounts >= 5) {
+        proxy.Message({
+          message: '您点击的次数太快，请稍后重试',
+          type: 'warning',
+        });
+        return;
+      }
+      startForbidGetImgTimer();
+      uuid = getUUID();
+      loginForm.validImg = await getImgCodeApi(uuid);
+      getImgCounts += 1;
+    };
+    /* 这是Vue3对对象的某一个属性监听的新写法，如果将该函数改为'loginForm.verifyCode'会有警告
+    watch(() => loginForm.verifyCode, (newV) => {
+      emit('getValidCode', newV);
+    }); */
+    // 开启自动刷新验证码的定时器
+    const startFlushValidImgTimer = () => {
+      clearInterval(flushValidImgTimer);
+      // 首次开启的时候先获取一次图片验证码
+      getVerifyCode();
+      // 每隔60秒获取一次图片验证码
+      flushValidImgTimer = setInterval(getVerifyCode, 60000);
+    };
+    // 渲染完毕开启自动刷新的定时器
+    onMounted(() => { startFlushValidImgTimer(); });
+    // 需要在组件销毁的时候关闭所有计时器
+    onUnmounted(() => { clearTimeout(forbidGetTimer); clearInterval(flushValidImgTimer); });
     // 登录
     const handleLogin = async () => {
       const res = await proxy.$refs.loginFormRef.validate().catch((err) => err);
       if (res !== true) {
         return false;
       }
+      const { code, msg } = await postCheckUserApi({
+        username: loginForm.logusername,
+        password: loginForm.password,
+        verifyCode: loginForm.verifyCode,
+        uuid,
+      });
+      if (code === 400) {
+        switch (msg) {
+          case 'pars err':
+            proxy.Message({ message: '登录信息不能为空', type: 'warning' });
+            break;
+          case 'usr nonexists':
+            proxy.Message({ message: '用户名不存在', type: 'warning' });
+            break;
+          case 'pwd err':
+            proxy.Message({ message: '密码错误', type: 'error' });
+            break;
+          case 'valid dead':
+            proxy.Message({ message: '验证码失效', type: 'warning' });
+            getVerifyCode();
+            break;
+          case 'valid err':
+            proxy.Message({ message: '验证码错误', type: 'warning' });
+            break;
+          default:
+        }
+        return false;
+      }
+      if (code === 500) {
+        proxy.Message({ message: '登录失败!!', type: 'error' });
+        return false;
+      }
+      proxy.Message({ message: '登录成功!!', type: 'success' });
       return true;
     };
     return {
@@ -128,7 +210,8 @@ export default {
 
 .blog_login {
   position: relative;
-  width: 500px;
+  max-width: 500px;
+  width: 14.4rem;
   height: 410px;
   padding: 80px 0 15px;
   .logo_box {
@@ -152,7 +235,8 @@ export default {
     }
   }
   .login_box {
-    width: 450px;
+    max-width: 450px;
+    width: 13.4rem;
     margin: 80px auto 0;
   }
 }
@@ -175,6 +259,13 @@ export default {
       .iconfont {
         font-size: 20px;
       }
+    }
+  }
+}
+
+@media screen and (max-width: 518px) {
+  .blog_login {
+    .login_form {
     }
   }
 }

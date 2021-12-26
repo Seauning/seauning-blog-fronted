@@ -91,7 +91,7 @@
 // 引入element的icon
 import { UploadFilled, Loading } from '@element-plus/icons';
 import {
-  reactive, getCurrentInstance, ref, inject,
+  reactive, getCurrentInstance, ref, inject, onUnmounted,
 } from 'vue';
 import { getSmscodeApi, postUploadAvatarApi, postRegisterUserApi } from '@/api/registerApi.js';
 
@@ -269,7 +269,10 @@ export default {
         }
         return false;
       }
-      console.log('注册成功');
+      proxy.Message({
+        message: '注册成功!!!',
+        type: 'success',
+      });
       return true;
     };
     // 关闭注册对话框
@@ -277,6 +280,8 @@ export default {
       changeRegisterVisible(false);
       proxy.$refs.registerFormRef.resetFields();
     };
+    // 需要在组件销毁的时候关闭所有计时器
+    onUnmounted(() => clearInterval(timer));
     return {
       isDisabled,
       restTime,
