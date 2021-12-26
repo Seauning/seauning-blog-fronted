@@ -141,19 +141,12 @@ export default {
           return false;
         }
         const { code, msg } = await getSmscodeApi(registerForm.phone);
-        if (code === 400) {
-          proxy.Message({
+        if (code !== 0) {
+          const type = code === 400 ? 'warning' : 'error';
+          return proxy.Message({
             message: msg,
-            type: 'warning',
+            type,
           });
-          return false;
-        }
-        if (code === 500) {
-          proxy.Message({
-            message: msg,
-            type: 'error',
-          });
-          return false;
         }
         // 当验证码发送成功后开启倒计时
         startInterval();
