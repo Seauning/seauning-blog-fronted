@@ -104,23 +104,24 @@ export default {
     };
     // 开启禁止获取图片验证码的计时器
     const startForbidGetImgTimer = () => {
-      clearTimeout(forbidGetTimer);
+      if (forbidGetTimer != null) { clearTimeout(forbidGetTimer); }
       function reset() {
         getImgCounts = 0 && clearTimeout(forbidGetTimer);
       }
-      // 禁用3秒的获取图片验证码
+      // 每3秒清空一次点击次数
       forbidGetTimer = setTimeout(reset, 3000); // 此处不能加()否则会立即执行函数体里的内容
     };
     // 获取图片验证码
     const getVerifyCode = async () => {
-      if (forbidGetTimer != null && getImgCounts >= 5) {
+      if (getImgCounts >= 6) {
+        startForbidGetImgTimer();
         proxy.Message({
           message: '您点击的次数太快，请稍后重试',
           type: 'warning',
         });
         return;
       }
-      startForbidGetImgTimer();
+      // 开启发送倒计时
       uuid = getUUID();
       loginForm.validImg = await getImgCodeApi(uuid);
       getImgCounts += 1;

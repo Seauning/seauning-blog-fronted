@@ -140,12 +140,19 @@ export default {
         if (!phoneValidRes) {
           return false;
         }
-        const { code } = await getSmscodeApi(registerForm.phone);
+        const { code, msg } = await getSmscodeApi(registerForm.phone);
         if (code === 400) {
-          proxy.Message({
-            message: '手机号为空',
-            type: 'warning',
-          });
+          if (msg === 'pars err') {
+            proxy.Message({
+              message: '手机号为空',
+              type: 'warning',
+            });
+          } else {
+            proxy.Message({
+              message: '验证码生成失败，请尝试重新发送',
+              type: 'warning',
+            });
+          }
           return false;
         }
         if (code === 500) {
@@ -155,7 +162,7 @@ export default {
           });
           return false;
         }
-        // 当手机号码发送成功后开启倒计时
+        // 当验证码发送成功后开启倒计时
         startInterval();
         return true;
       });
