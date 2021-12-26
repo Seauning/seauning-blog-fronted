@@ -111,6 +111,7 @@ export default {
     let timer = null; // 计时器
     const restTime = ref(0); // 计时器中的时间
     const isDisabled = ref(false); // 发送短信按钮是否禁用
+    const { proxy } = getCurrentInstance(); // 当前实例
     const registerForm = reactive({
       regregusername: '',
       password: '',
@@ -118,12 +119,11 @@ export default {
       smsVerifyCode: '',
       fileList: [],
     });
-    const { proxy } = getCurrentInstance(); // 当前实例
     // 计时器
     const startInterval = () => {
       clearInterval(timer); // 先清一遍除计时器
       isDisabled.value = true; // 禁用按钮
-      restTime.value = 60; // 初始化时间
+      restTime.value = 30; // 初始化时间
       timer = setInterval(() => { // 开启计时器
         restTime.value -= 1;
         if (restTime.value === 0) {
@@ -147,6 +147,11 @@ export default {
               message: '手机号为空',
               type: 'warning',
             });
+          } else if (msg === 'send mtpl') {
+            proxy.Message({
+              message: '操作过于频繁，请稍后再试',
+              type: 'warning',
+            });
           } else {
             proxy.Message({
               message: '验证码生成失败，请尝试重新发送',
@@ -160,11 +165,13 @@ export default {
             message: '验证码发送失败，请尝试重新发送',
             type: 'error',
           });
-          return false;
         }
         // 当验证码发送成功后开启倒计时
         startInterval();
-        return true;
+        return proxy.Message({
+          message: '发送成功，请在30分钟内填写验证码',
+          type: 'success',
+        });
       });
     };
     // 头像上传前的校验

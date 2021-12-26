@@ -116,7 +116,7 @@ export default {
       if (getImgCounts >= 6) {
         startForbidGetImgTimer();
         proxy.Message({
-          message: '您点击的次数太快，请稍后重试',
+          message: '操作过于频繁，请稍后再试',
           type: 'warning',
         });
         return;
