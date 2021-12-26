@@ -142,34 +142,23 @@ export default {
         }
         const { code, msg } = await getSmscodeApi(registerForm.phone);
         if (code === 400) {
-          if (msg === 'pars err') {
-            proxy.Message({
-              message: '手机号为空',
-              type: 'warning',
-            });
-          } else if (msg === 'send mtpl') {
-            proxy.Message({
-              message: '操作过于频繁，请稍后再试',
-              type: 'warning',
-            });
-          } else {
-            proxy.Message({
-              message: '验证码生成失败，请尝试重新发送',
-              type: 'warning',
-            });
-          }
+          proxy.Message({
+            message: msg,
+            type: 'warning',
+          });
           return false;
         }
         if (code === 500) {
           proxy.Message({
-            message: '验证码发送失败，请尝试重新发送',
+            message: msg,
             type: 'error',
           });
+          return false;
         }
         // 当验证码发送成功后开启倒计时
         startInterval();
         return proxy.Message({
-          message: '发送成功，请在30分钟内填写验证码',
+          message: msg,
           type: 'success',
         });
       });
@@ -202,25 +191,26 @@ export default {
       // 2.图片上传
       const form = new FormData();
       form.append('file', file);
-      const { code, data } = await postUploadAvatarApi(form);
+      const { code, data, msg } = await postUploadAvatarApi(form);
       if (code !== 0) {
-        proxy.Message({
-          message: '上传失败，请尝试重新上传',
+        return proxy.Message({
+          message: msg,
           type: 'error',
         });
       }
       // 将头像载入临时数组
       proxy.$refs.upload.clearFiles();
       registerForm.fileList.push({ name: file.name, url: data.url });
-      return data;
-    };
-    // 提示图片数量超过1张
-    const warnOverLimit = () => {
-      proxy.Message({
-        message: '最多上传一张图片',
-        type: 'warning',
+      return proxy.Message({
+        message: msg,
+        type: 'success',
       });
     };
+    // 提示图片数量超过1张
+    const warnOverLimit = () => proxy.Message({
+      message: '最多上传一张图片',
+      type: 'warning',
+    });
     // 移除图像
     const handleRemove = (file) => {
       registerForm.fileList.splice(registerForm.fileList.indexOf(file), 1);
@@ -242,52 +232,16 @@ export default {
         registerForm.fileList[0] || '',
       );
       if (code !== 0) {
-        if (code === 400) {
-          let message = '';
-          switch (msg) {
-            case 'pars err':
-              message = '参数错误';
-              break;
-            case 'uname fmt err':
-              message = '用户名格式错误';
-              break;
-            case 'uname mtpl':
-              message = '用户名重复';
-              break;
-            case 'passwd fmt err':
-              message = '密码格式错误';
-              break;
-            case 'phone fmt err':
-              message = '手机号格式错误';
-              break;
-            case 'phone mtpl':
-              message = '手机号格式错误';
-              break;
-            case 'valid dead':
-              message = '验证码失效';
-              break;
-            case 'valid err':
-              message = '验证码错误';
-              break;
-            default:
-          }
-          proxy.Message({
-            message,
-            type: 'warning',
-          });
-        } else {
-          proxy.Message({
-            message: '注册失败，请尝试重新注册',
-            type: 'error',
-          });
-        }
-        return false;
+        const type = code === 400 ? 'warning' : 'error';
+        return proxy.Message({
+          message: msg,
+          type,
+        });
       }
-      proxy.Message({
-        message: '注册成功!!!',
+      return proxy.Message({
+        message: msg,
         type: 'success',
       });
-      return true;
     };
     // 关闭注册对话框
     const closeRegisterDialog = () => {

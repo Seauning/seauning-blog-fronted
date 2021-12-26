@@ -23,29 +23,29 @@ export default {
     // const { proxy } = getCurrentInstance();
     // 添加用户名规则检测用户是否存在
     const checkUserCount = async (rule, value, callback) => {
-      const { code, data } = await getUsernameCountApi(value);
+      const { code, data, msg } = await getUsernameCountApi(value);
       if (code === 0) {
         if (data.count !== 0) {
-          return callback(new Error('用户名已被注册'));
+          return callback(new Error('用户名已注册'));
         }
       } else if (code === 400) {
-        return callback(new Error('用户名格式错误'));
+        return callback(new Error(msg));
       } else {
-        return callback(new Error('服务器响应错误，请检测网络'));
+        return callback(new Error(msg));
       }
       return true;
     };
     // 添加手机号规则检测手机号是否存在
     const checkPhoneCount = async (rule, value, callback) => {
-      const { code, data } = await getPhoneCountApi(value);
+      const { code, data, msg } = await getPhoneCountApi(value);
       if (code === 0) {
         if (data.count !== 0) {
           return callback(new Error('手机号已被注册'));
         }
       } else if (code === 400) {
-        return callback(new Error('手机号格式错误'));
+        return callback(new Error(msg));
       } else {
-        return callback(new Error('服务器响应错误，请检测网络'));
+        return callback(new Error(msg));
       }
       return true;
     };

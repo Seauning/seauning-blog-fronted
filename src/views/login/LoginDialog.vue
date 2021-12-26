@@ -115,16 +115,16 @@ export default {
     const getVerifyCode = async () => {
       if (getImgCounts >= 6) {
         startForbidGetImgTimer();
-        proxy.Message({
+        return proxy.Message({
           message: '操作过于频繁，请稍后再试',
           type: 'warning',
         });
-        return;
       }
       // 开启发送倒计时
       uuid = getUUID();
       loginForm.validImg = await getImgCodeApi(uuid);
       getImgCounts += 1;
+      return true;
     };
     /* 这是Vue3对对象的某一个属性监听的新写法，如果将该函数改为'loginForm.verifyCode'会有警告
     watch(() => loginForm.verifyCode, (newV) => {
@@ -154,34 +154,11 @@ export default {
         verifyCode: loginForm.verifyCode,
         uuid,
       });
-      if (code === 400) {
-        switch (msg) {
-          case 'pars err':
-            proxy.Message({ message: '登录信息不能为空', type: 'warning' });
-            break;
-          case 'usr nonexists':
-            proxy.Message({ message: '用户名不存在', type: 'warning' });
-            break;
-          case 'pwd err':
-            proxy.Message({ message: '密码错误', type: 'error' });
-            break;
-          case 'valid dead':
-            proxy.Message({ message: '验证码失效', type: 'warning' });
-            getVerifyCode();
-            break;
-          case 'valid err':
-            proxy.Message({ message: '验证码错误', type: 'warning' });
-            break;
-          default:
-        }
-        return false;
+      if (code !== 0) {
+        const type = code === 400 ? 'warning' : 'error';
+        return proxy.Message({ message: msg, type });
       }
-      if (code === 500) {
-        proxy.Message({ message: '登录失败!!', type: 'error' });
-        return false;
-      }
-      proxy.Message({ message: '登录成功!!', type: 'success' });
-      return true;
+      return proxy.Message({ message: '登录成功!!', type: 'success' });
     };
     return {
       loginForm,
