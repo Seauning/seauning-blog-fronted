@@ -10,11 +10,12 @@
                :model="loginForm"
                :rules="formRules"
                label-width="0px"
-               class="login_form">
+               class="login_form"
+               @submit.prevent>
         <!-- 用户名 -->
         <el-form-item prop="logusername">
           <el-input v-model="loginForm.logusername"
-                    placeholder="请输入用户名"
+                    placeholder="请输入登录名"
                     prefix-icon="el-icon"></el-input>
           <span class="icon_wrap">
             <svg class="icon iconfont"
@@ -57,7 +58,8 @@
           <el-button type="success"
                      @click="changeRegisterVisible(true)">注册</el-button>
           <el-button type="primary"
-                     @click="handleLogin">登录</el-button>
+                     @click="handleLogin"
+                     native-type="submit">登录</el-button>
           <el-button type="info"
                      @click="resetLoginForm">重置</el-button>
         </el-form-item>

@@ -14,9 +14,11 @@
                  :auto-upload="false"
                  label-position="top"
                  label-width="80px"
-                 class="rigister_form">
+                 class="rigister_form"
+                 @submit="handleRegister">
           <!-- 用户名 -->
-          <el-form-item prop="regusername"
+          <el-form-item prop="
+                 regusername"
                         label="用户名">
             <el-input v-model="registerForm.regusername"
                       placeholder="请输入用户名"></el-input>
@@ -136,7 +138,7 @@ export default {
     const getsmsVerifyCode = () => {
       // 在表单项中进行手机号校验
       proxy.$refs.registerFormRef.validateField('phone', async (pass) => {
-        const phoneValidRes = pass === ''; // 判断是否通过验证
+        const phoneValidRes = pass === ''; // 判断是2否通过验证
         if (!phoneValidRes) {
           return false;
         }

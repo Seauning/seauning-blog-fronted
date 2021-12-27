@@ -53,10 +53,7 @@ export default {
     const formRules = {
       // 验证登录用户名是否合法
       logusername: [
-        { required: true, message: '请输入用户名', trigger: 'blur' },
-        {
-          min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur',
-        },
+        { required: true, message: '请输入用户名或手机号', trigger: 'blur' },
       ],
       // 验证注册用户名是否合法
       regusername: [
