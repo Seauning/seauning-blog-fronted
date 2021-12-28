@@ -13,6 +13,7 @@
     "axios": "^0.24.0",
     "element-plus": "^1.2.0-beta.6",
     "lodash": "^4.17.21",
+    "particles.vue3": "^1.20.6",
     "unplugin-vue-components": "^0.17.9",
     "uuid": "^8.3.2",
     "vite": "^2.7.2",

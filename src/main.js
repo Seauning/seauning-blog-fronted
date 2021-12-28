@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
+import Particles from 'particles.vue3';
 // 引入lodash
 import App from './App.vue';
-
 // 引入router
 import router from './router/index';
 // 引入vuex
@@ -23,4 +23,4 @@ import 'animate.css';
 const app = createApp(App);
 app.config.globalProperties.Message = Message;
 
-app.use(router).use(store).mount('#app');
+app.use(router).use(store).use(Particles).mount('#app');

@@ -4,17 +4,11 @@
       <a href="#"
          class="a_underline">
         <div class="article_content">
-          <h1 class="article_title">入站须知</h1>
-          <div class="article_desc text_soh">
+          <h1 class="article_title">入站须知入站须知入站须知入站须知入站须知</h1>
+          <p class="article_desc text_moh">
             如何获取源码地址？入站有什么注意事项?进来便知!
             如何获取源码地址？入站有什么注意事项?进来便知!
-            如何获取源码地址？入站有什么注意事项?进来便知!
-            如何获取源码地址？入站有什么注意事项?进来便知!
-            如何获取源码地址？入站有什么注意事项?进来便知!
-            如何获取源码地址？入站有什么注意事项?进来便知!
-            如何获取源码地址？入站有什么注意事项?进来便知!
-            如何获取源码地址？入站有什么注意事项?进来便知!
-          </div>
+          </p>
         </div>
       </a>
       <div class="user_info">
@@ -107,7 +101,7 @@ export default {
       margin-bottom: 20px;
     }
     .article_desc {
-      color: $color666;
+      color: $color777;
       font-size: 16px;
       margin-bottom: 20px;
     }
