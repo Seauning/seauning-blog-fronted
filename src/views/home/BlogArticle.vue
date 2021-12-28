@@ -84,7 +84,7 @@ export default {
     a {
       display: block;
       width: 100%;
-      height: 2rem;
+      height: 1.8rem;
     }
     .image {
       display: block;
@@ -117,24 +117,19 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.16rem;
+  font-size: 16px;
   .left_wrap {
     display: inline-block;
     cursor: pointer;
     height: 100%;
     font-family: $ffYahei;
     font-weight: 400;
+    color: $colorebbb;
     .iconfont {
       margin-left: 10px;
       margin-right: 5px;
-      font-size: 0.2rem;
+      // font-size: 0.2rem;
       color: $color666;
-    }
-    .article_date {
-      color: $colorebbb;
-    }
-    .article_views {
-      color: $colorebbb;
     }
   }
   .avatar_wrap {
@@ -156,10 +151,11 @@ export default {
     text-align: right;
     transition: all 0.3s linear;
     .article_tag {
-      display: inline;
+      display: inline-block;
       cursor: pointer;
       padding: 5px;
       margin-left: 0.066666rem;
+      margin-bottom: 0.05rem;
       border: 1px solid $coloreccc;
       border-radius: 4px;
       font-size: 10px;

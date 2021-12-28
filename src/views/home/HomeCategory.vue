@@ -1,20 +1,76 @@
 <template>
   <div class="home_cate">
-    <my-card></my-card>
+    <my-card>
+      <template #title>
+        分类
+      </template>
+      <template #default>
+        <div class="cate_items">
+          <div class="cate_item"
+               v-for="(item, index) in [1,2,3,4,5]"
+               :key="index">111
+            <my-tag :utag_class="'my_tag'">
+              <!-- 100 -->
+            </my-tag>
+          </div>
+        </div>
+      </template>
+    </my-card>
   </div>
 </template>
 
 <script>
 import MyCard from '@/components/MyCard.vue';
+import MyTag from '@/components/MyTag.vue';
 
 export default {
   name: 'HomeCategory',
   components: {
+    MyTag,
     MyCard,
   },
-
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+.home_cate {
+  .cate_items {
+    border: 1px solid rgb(34 36 38 / 15%);
+    border-radius: 0.2em;
+    .cate_item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 2.8125em;
+      padding: 0 1em;
+      border-bottom: 1px solid rgb(34 36 38 / 15%);
+      cursor: pointer;
+      transition: all 0.1s linear;
+      &:hover {
+        color: inherit;
+        background-color: #f7f7f7;
+      }
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+.cate_item {
+  display: flex;
+  justify-content: space-between;
+  .cate_item_text {
+  }
+
+  .cate_item_label {
+    text-align: right;
+  }
+}
+.my_tag {
+  border-color: #4183c4;
+  &::before {
+    border-color: #4183c4;
+  }
+}
 </style>

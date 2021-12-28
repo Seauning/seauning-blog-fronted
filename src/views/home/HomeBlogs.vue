@@ -48,8 +48,6 @@ export default {
 
 <style lang="scss" scoped>
 .my_card {
-  width: 68.75%;
-  margin: 0 auto;
   border-radius: 5px;
   background-color: #fff;
   .card_header {

@@ -10,8 +10,14 @@
         </div>
       </div>
     </div>
-    <div class="home_mess">
-      <home-blogs></home-blogs>
+    <div class="home_mess cl">
+      <div class="left_mess">
+        <home-blogs></home-blogs>
+      </div>
+      <div class="right_mess">
+        <home-category></home-category>
+        <home-tag></home-tag>
+      </div>
     </div>
     <blog-record></blog-record>
   </div>
@@ -19,10 +25,12 @@
 
 <script>
 import HomeBlogs from '@/views/home/HomeBlogs.vue';
+import HomeCategory from '@/views/home/HomeCategory.vue';
+import HomeTag from '@/views/home/HomeTag.vue';
 
 export default {
   name: 'BlogHome',
-  components: { HomeBlogs },
+  components: { HomeBlogs, HomeCategory, HomeTag },
 };
 </script>
 
@@ -78,12 +86,35 @@ export default {
 .home_mess {
   padding-top: 105vh;
   padding-bottom: 0;
+  .left_mess {
+    float: left;
+    width: 68%;
+    padding-left: 0.7rem;
+    box-sizing: border-box;
+  }
+  .right_mess {
+    float: right;
+    width: 32%;
+    padding: 0 30px;
+    box-sizing: border-box;
+  }
 }
 
 @media screen and(max-width:746px) {
   .home_mess {
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    .left_mess {
+      float: none;
+      width: 100%;
+      padding-left: 0;
+    }
+    .right_mess {
+      float: none;
+      width: 100%;
+      margin-top: 20px;
+      margin-right: 0;
+    }
   }
 }
 </style>

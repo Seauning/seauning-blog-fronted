@@ -236,8 +236,12 @@ export default {
       text-align: center;
       line-height: 47px;
       z-index: 2;
-      .iconfont {
-        font-size: 20px;
+      .icon {
+        width: 100%;
+        height: 100%;
+        padding: 3px;
+        font-size: 18px;
+        box-sizing: border-box;
       }
     }
   }

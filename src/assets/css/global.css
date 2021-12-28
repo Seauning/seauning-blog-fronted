@@ -22,7 +22,7 @@ body {
     浏览器会依据vw视口的大小更改根元素的font-size
 */
 :root {
-  font-size: 6.6666vw;
+  font-size: 6.6666vw !important;
 }
 
 /* 配置滚动条 */
