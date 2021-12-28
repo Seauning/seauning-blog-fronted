@@ -1,13 +1,22 @@
 <template>
   <div class="main">
-    <div class="home_header">
+    <div class="home_header"
+         ref="header_ref">
       <div class="header_content">
         <div class="header_text animate__animated animate__zoomInUp">首页</div>
         <div class="blogger_detail animate__animated animate__zoomInUp">
           <a href="#"><i class="iconfont icon-github"></i></a>
-          <a href="#"><i class="iconfont icon-weixin"></i></a>
-          <a href="#"><i class="iconfont icon-qq"></i></a>
+          <a href="#"
+             title="lightsme"><i class="iconfont icon-weixin"></i></a>
+          <a href="#"
+             title="1648449524"><i class="iconfont icon-qq"></i></a>
         </div>
+      </div>
+      <div class="header_to_bottom"
+           @click="rollDown">
+        向下滚动<el-icon>
+          <arrow-down-bold />
+        </el-icon>
       </div>
     </div>
     <div class="home_mess cl">
@@ -24,13 +33,37 @@
 </template>
 
 <script>
+import { ArrowDownBold } from '@element-plus/icons';
+import { getCurrentInstance } from 'vue';
 import HomeBlogs from '@/views/home/HomeBlogs.vue';
 import HomeCategory from '@/views/home/HomeCategory.vue';
 import HomeTag from '@/views/home/HomeTag.vue';
 
 export default {
   name: 'BlogHome',
-  components: { HomeBlogs, HomeCategory, HomeTag },
+  components: {
+    HomeBlogs, HomeCategory, HomeTag, ArrowDownBold,
+  },
+  setup() {
+    const { proxy } = getCurrentInstance();
+    const rollDown = () => {
+      // 获取页面卷曲高度
+      const scrollHeight = window.pageYOffset;
+      // 获取头部图片的高度
+      const headerHeight = proxy.$refs.header_ref.clientHeight;
+      // scrollBy按指定的偏移量进行滚动,
+      // 参数top，behavior
+      // top滚动的距离
+      // behavior滚动的方式smooth平滑滚动,instant瞬间滚动
+      window.scrollBy({
+        top: headerHeight - scrollHeight,
+        behavior: 'smooth',
+      });
+    };
+    return {
+      rollDown,
+    };
+  },
 };
 </script>
 
@@ -41,6 +74,7 @@ export default {
 }
 
 .home_header {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -61,6 +95,18 @@ export default {
       font-family: Lato;
       font-weight: 600;
     }
+  }
+  .header_to_bottom {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    color: #fff;
+    font-size: 20px;
+    font-family: Lato;
+    font-weight: 600;
+    cursor: pointer;
   }
 }
 

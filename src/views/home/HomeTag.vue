@@ -38,7 +38,7 @@ export default {
   font-weight: 600;
 }
 .my_tag {
-  margin: 5px;
+  margin: 6px;
   .tag_number {
     margin-left: 1em;
   }

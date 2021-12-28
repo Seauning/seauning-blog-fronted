@@ -41,12 +41,12 @@ export default {
 <style lang="scss" scoped>
 /* 盒子hover时添加阴影 */
 .se_card_shadow {
-  transition: all 0.1s linear;
+  transition: all 0.15s linear;
 }
 
 .se_card_shadow:hover {
   border-radius: 5px;
-  box-shadow: 0 0 5px 5px #ededed;
+  box-shadow: 0 0 10px 10px #dbdadaec;
 }
 
 .se_card {
@@ -56,6 +56,7 @@ export default {
   margin: 0 auto 20px;
   font-family: 'Lato';
   box-sizing: border-box;
+  box-shadow: 0 0 5px 5px #ededed;
   .se_card_header {
     height: 3.25em;
     padding-left: 1.4em;
@@ -68,7 +69,7 @@ export default {
     .card_title {
       display: inline-block;
       width: 50%;
-      color: #777;
+      color: #666;
       text-align: left;
       cursor: default;
     }

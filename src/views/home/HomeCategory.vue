@@ -44,6 +44,7 @@ export default {
       height: 2.8125em;
       padding: 0 1em;
       border-bottom: 1px solid rgb(34 36 38 / 15%);
+      color: #666;
       cursor: pointer;
       transition: all 0.1s linear;
       &:hover {
