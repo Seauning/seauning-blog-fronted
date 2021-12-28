@@ -8,9 +8,9 @@
         <div class="cate_items">
           <div class="cate_item"
                v-for="(item, index) in [1,2,3,4,5]"
-               :key="index">111
+               :key="index">学习日志
             <my-tag :utag_class="'my_tag'">
-              <!-- 100 -->
+              20
             </my-tag>
           </div>
         </div>
@@ -42,7 +42,7 @@ export default {
       justify-content: space-between;
       align-items: center;
       height: 2.8125em;
-      padding: 0 1em;
+      padding: 0.2em 1em;
       border-bottom: 1px solid rgb(34 36 38 / 15%);
       color: #666;
       cursor: pointer;
@@ -70,6 +70,7 @@ export default {
 }
 .my_tag {
   border-color: #4183c4;
+  color: #4183c4;
   &::before {
     border-color: #4183c4;
   }

@@ -1,8 +1,8 @@
 <template>
   <div class="blog_item">
     <div class="blog_article">
-      <a href="#"
-         class="a_underline">
+      <router-link to="/blog"
+                   class="a_underline">
         <div class="article_content">
           <h1 class="article_title">入站须知入站须知入站须知入站须知入站须知</h1>
           <p class="article_desc text_moh">
@@ -10,17 +10,17 @@
             如何获取源码地址？入站有什么注意事项?进来便知!
           </p>
         </div>
-      </a>
+      </router-link>
       <div class="user_info">
         <div class="left_wrap">
-          <a href="#"
-             class="avatar_wrap a_underline">
+          <router-link to="#"
+                       class="avatar_wrap a_underline">
             <img class="user_avatar"
                  src="../../assets/imgs/avatar.jpg" />
             <span class="user_name">
               Seauning
             </span>
-          </a>
+          </router-link>
           <span class="article_date_wrap">
             <i class="iconfont icon-rili"></i>
             <span class="article_date">2021-02-03 20:00</span>
@@ -31,18 +31,18 @@
           </span>
         </div>
         <div class="right_wrap">
-          <a href="#"
-             class="a_underline article_tag">生活</a>
-          <a href="#"
-             class="a_underline article_tag">科技</a>
+          <router-link to="#"
+                       class="a_underline article_tag">生活</router-link>
+          <router-link to="#"
+                       class="a_underline article_tag">科技</router-link>
         </div>
       </div>
     </div>
     <div class="img_wrap">
-      <a href="#">
+      <router-link to="/blog">
         <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
              class="image" />
-      </a>
+      </router-link>
     </div>
   </div>
 </template>

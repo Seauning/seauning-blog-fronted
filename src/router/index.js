@@ -5,12 +5,14 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 const blogHome = () => import('@/views/home/BlogHome.vue');
 const loginFrame = () => import('@/views/login/BlogLogin.vue');
 const musicFrame = () => import('@/views/music/BlogMusic.vue');
+const blogDetail = () => import('@/views/BlogDetail.vue');
 
 const routes = [
   { path: '/', redirect: '/home' },
   { path: '/home', name: 'Home', component: blogHome },
   { path: '/login', name: 'Login', component: loginFrame },
   { path: '/music', name: 'Music', component: musicFrame },
+  { path: '/blog', name: 'Blog', component: blogDetail },
 ];
 
 const router = createRouter({

@@ -17,8 +17,8 @@ export default {
 .se_tag {
   display: inline-block;
   position: relative;
-  min-height: 0.6em;
-  padding: 0.35em 0.7em;
+  min-height: 0.5em;
+  padding: 0.28em 0.7em;
   text-align: left;
   border: 1px solid #09a0939d;
   border-radius: 0.32em;
@@ -39,7 +39,7 @@ export default {
     border: 1px solid #09a0939d;
     border-top: none;
     border-right: none;
-    transform: translate(-50%, -50%) rotate(45deg);
+    transform: translate(-58%, -50%) rotate(45deg);
   }
 }
 </style>
