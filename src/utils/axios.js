@@ -1,6 +1,7 @@
 /* eslint-disable implicit-arrow-linebreak */
 import Axios from 'axios';
 import { Message } from './tool';
+// import store from '@/store';
 
 const baseURL = 'http://localhost:8082/api';
 const request = Axios.create({
@@ -11,12 +12,15 @@ const request = Axios.create({
 // 以下axio拦截器需要学习!!!
 // 前置拦截器（发起请求之前的拦截）
 request.interceptors.request.use(
-  (config) =>
+  (config) => {
     /**
      * 根据你的项目实际情况来对 config 做处理
      * 这里对 config 不做任何处理，直接返回
      */
-    config,
+    config.headers.Authorization = window.localStorage.getItem('token');
+    // if (store.getters.GET_TOKEN) config.headers['User-Token'] = store.GET_TOKEN();
+    return config;
+  },
   (error) => Promise.reject(error),
 );
 
@@ -24,12 +28,12 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   (response) => {
     /**
-       * 根据你的项目实际情况来对 response 和 error 做处理
-       * 这里解构出响应的数据直接返回
+       * 根据项目实际情况来对 response 和 error 做处理
        */
-    const { data } = response;
+    const res = response;
+    // if (code)
     // console.log(data);
-    return Promise.resolve(data);
+    return Promise.resolve(res.data);
   },
   (error) => {
     if (error.response && error.response.data) {

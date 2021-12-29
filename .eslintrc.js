@@ -28,5 +28,15 @@ module.exports = {
     ],
     'vue/comment-directive': 'off', // 允许在标签中写注释
     'import/extensions': ['error', { js: 'nerver', vue: 'nerver', css: 'nerver' }], // 允许import后缀为.js的文件
+    'no-param-reassign': [
+      'error',
+      {
+        props: true,
+        ignorePropertyModificationsFor: [
+          'config',
+          'state', // for vuex state
+        ],
+      },
+    ],
   },
 };

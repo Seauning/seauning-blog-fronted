@@ -6,18 +6,61 @@ const blogHome = () => import('@/views/home/BlogHome.vue');
 const loginFrame = () => import('@/views/login/BlogLogin.vue');
 const musicFrame = () => import('@/views/music/BlogMusic.vue');
 const blogDetail = () => import('@/views/BlogDetail.vue');
+const blogAdmin = () => import('@/views/admin/BlogAdmin.vue');
+const blogEdit = () => import('@/views/admin/BlogEdit.vue');
 
 const routes = [
-  { path: '/', redirect: '/home' },
-  { path: '/home', name: 'Home', component: blogHome },
-  { path: '/login', name: 'Login', component: loginFrame },
-  { path: '/music', name: 'Music', component: musicFrame },
-  { path: '/blog', name: 'Blog', component: blogDetail },
+  {
+    path: '/',
+    redirect: '/home',
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    component: blogHome,
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: loginFrame,
+  },
+  {
+    path: '/music',
+    name: 'Music',
+    component: musicFrame,
+  },
+  {
+    path: '/blog',
+    name: 'Blog',
+    component: blogDetail,
+  },
+  {
+    path: '/admin', // 以/开头的嵌套路径将被认为是根路径
+    component: blogAdmin,
+    name: 'Admin',
+    props: true, // 开启props传参
+    children: [
+      {
+        path: 'edit', component: blogEdit, props: true,
+      },
+    ],
+  },
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+});
+
+// 前置守卫判断用户访问的页面
+router.beforeEach((to, from, next) => {
+  if (to.path.startsWith('/admin')) {
+    const token = window.localStorage.getItem('token');
+    if (!token) { // 如果用户没有登录则跳转至登录页面
+      return next('/login');
+    }
+  }
+  return next();
 });
 
 export default router;

@@ -17,8 +17,7 @@
                  class="rigister_form"
                  @submit="handleRegister">
           <!-- 用户名 -->
-          <el-form-item prop="
-                 regusername"
+          <el-form-item prop="regusername"
                         label="用户名">
             <el-input v-model="registerForm.regusername"
                       placeholder="请输入用户名"></el-input>
@@ -115,7 +114,7 @@ export default {
     const isDisabled = ref(false); // 发送短信按钮是否禁用
     const { proxy } = getCurrentInstance(); // 当前实例
     const registerForm = reactive({
-      regregusername: '',
+      regusername: '',
       password: '',
       phone: '',
       smsVerifyCode: '',

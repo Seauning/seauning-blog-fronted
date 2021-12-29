@@ -1,8 +1,17 @@
 <script setup>
+import { ref, toRefs, watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
 import TopNavBar from '@/components/layout/TopNavBar.vue';
 
+const { path } = toRefs(useRoute());
+const TopNavBarIsShow = ref('');
+// console.log(path.value);
+// 刷新后路由会找不到需要通过watch进行监听
+watchEffect(() => {
+  TopNavBarIsShow.value = !path.value.startsWith('/admin');
+});
 // 导航栏列表无需响应
-const navItems = [
+const homeNavItems = [
   {
     id: 0, name: '首页', url: '/home', icon: 'icon-shouye',
   },
@@ -13,6 +22,7 @@ const navItems = [
     id: 2, name: '登录', url: '/login', icon: 'icon-geren',
   },
 ];
+
 const options = {
   autoPlay: true,
   background: { position: '50% 50%', repeat: 'no-repeat', opacity: 1 },
@@ -153,9 +163,12 @@ const options = {
 
 <template>
   <div class="app">
-    <Particles id="particles"
+    <!-- 动态背景不在后台显示 -->
+    <Particles v-if="TopNavBarIsShow"
+               id="particles"
                :options="options" />
-    <top-nav-bar :navItems="navItems"></top-nav-bar>
+    <top-nav-bar v-if="TopNavBarIsShow"
+                 :navItems="homeNavItems"></top-nav-bar>
     <router-view></router-view>
   </div>
 </template>
@@ -163,6 +176,7 @@ const options = {
 <style lang="scss" scoped>
 .app {
   position: relative;
+  height: 100%;
   .particles {
     width: 100%;
     height: 100%;

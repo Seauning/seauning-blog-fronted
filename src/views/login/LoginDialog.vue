@@ -72,6 +72,8 @@
 import {
   getCurrentInstance, reactive, inject, onMounted, onUnmounted,
 } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import { getUUID } from '@/utils/tool';
 import { getImgCodeApi, postCheckUserApi } from '@/api/loginApi.js';
 
@@ -91,6 +93,12 @@ export default {
     let uuid = '';
     // 获取当前的app实例，并从中解构出proxy
     const { proxy } = getCurrentInstance();
+    // 获取当前的router和vuex实例
+    // (需要注意的是这三个方法都只能再setup中使用不能在函数体中使用)
+    const store = useStore();
+    console.log(store);
+    const router = useRouter();
+
     // 禁止获取图片
     const changeRegisterVisible = inject('changeRegisterVisible');
     // 这是登录表单的数据绑定对象
@@ -150,7 +158,7 @@ export default {
       if (res !== true) {
         return false;
       }
-      const { code, msg } = await postCheckUserApi({
+      const { code, msg, data } = await postCheckUserApi({
         username: loginForm.logusername,
         password: loginForm.password,
         verifyCode: loginForm.verifyCode,
@@ -160,6 +168,12 @@ export default {
         const type = code === 400 ? 'warning' : 'error';
         return proxy.Message({ message: msg, type });
       }
+      // vuex中存入token（这部分等学了vuex再完善)
+      // store.dispatch('setToken', data.token);
+      // store
+      window.localStorage.setItem('token', data.token);
+      // 跳转到后台
+      router.push({ name: 'Admin' });
       return proxy.Message({ message: '登录成功!!', type: 'success' });
     };
     return {
@@ -243,13 +257,6 @@ export default {
         font-size: 18px;
         box-sizing: border-box;
       }
-    }
-  }
-}
-
-@media screen and (max-width: 518px) {
-  .blog_login {
-    .login_form {
     }
   }
 }
