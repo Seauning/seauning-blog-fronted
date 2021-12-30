@@ -1,17 +1,6 @@
 <template>
   <div class="my_detail">
-    <header class="detail_header">
-      <span class="left_menu_info">
-        <span class="sub_info">用户管理</span>
-        <span class="item_info">个人信息</span>
-      </span>
-      <el-breadcrumb separator="/"
-                     class="right_nav">
-        <el-breadcrumb-item>信息管理</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/' }">个人信息</el-breadcrumb-item>
-      </el-breadcrumb>
-    </header>
-    <main class="detail_main">
+    <admin-main :menuItems="menuItems">
       <el-form :inline="true"
                :model="userInfo"
                :rules="formRules"
@@ -32,7 +21,7 @@
         </el-form-item>
         <el-form-item style="width: 94%">
           <el-upload class="avatar_uploader"
-                     :ref="upload"
+                     ref="uploadRef"
                      drag
                      action="#"
                      list-type="picture"
@@ -56,7 +45,7 @@
                      native-type="submit">立即修改</el-button>
         </el-form-item>
       </el-form>
-    </main>
+    </admin-main>
   </div>
 </template>
 
@@ -65,20 +54,36 @@ import { UploadFilled } from '@element-plus/icons';
 import {
   getCurrentInstance, ref, inject,
 } from 'vue';
+import AdminMain from '@/components/layout/AdminMain.vue';
 import { postUploadAvatarApi } from '@/api/registerApi.js';
 import { updateUserInfoApi } from '@/api/adminApi.js';
 
 export default {
   name: 'MyDetail',
   components: {
+    AdminMain,
     UploadFilled,
   },
   setup() {
     const { proxy } = getCurrentInstance(); // 当前实例
     // 定义上传器的ref实例
-    const upload = ref(null);
+    const uploadRef = ref(null);
     // 定义filelist的动态数组
     const filelist = ref([]);
+    // 头部面包屑菜单
+    const menuItems = [
+      {
+        id: 0,
+        name: '信息管理',
+        path: '/admin/me',
+      },
+      [
+        {
+          id: 1,
+          name: '个人信息',
+        },
+      ],
+    ];
     const checkMobile = (rule, value, callback) => {
       if (!(/^1[3456789]\d{9}$/.test(value))) {
         return callback(new Error('请输入正确格式'));
@@ -189,8 +194,9 @@ export default {
     };
     return {
       formRules,
+      menuItems,
       userInfo,
-      upload,
+      uploadRef,
       filelist,
       uploadAvatar,
       onBeforeUploadAvatar,
@@ -205,48 +211,17 @@ export default {
 <style lang="scss" scoped>
 .my_detail {
   padding: 20px;
-  .detail_header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .left_menu_info {
-      font-family: $ffYahei;
-      .sub_info {
-        margin-right: 5px;
-        color: #000;
-        font-size: 30px;
-        font-weight: 500;
-      }
-      .item_info {
-        color: rgba(78, 77, 77, 0.87);
-        font-size: 20px;
-      }
-    }
+}
 
-    .right_nav {
-      .el-breadcrumb__item {
-        font-size: 16px;
-      }
-    }
+.user_info {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  .el-form-item {
+    width: 45%;
   }
 }
-.detail_main {
-  height: 100%;
-  border-top: 5px solid;
-  border-color: linear-gradient(#000000, #434343);
-  margin-top: 20px;
-  padding: 20px;
-  background-color: #fff;
-  box-sizing: border-box;
-  .user_info {
-    display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-    .el-form-item {
-      width: 45%;
-    }
-  }
-}
+
 :deep(.avatar_uploader) {
   .el-upload {
     width: 100%;
