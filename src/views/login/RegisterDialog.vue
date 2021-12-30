@@ -193,7 +193,6 @@ export default {
         });
       }
       // 将头像载入临时数组
-      proxy.$refs.upload.clearFiles();
       registerForm.fileList.push({ name: file.name, url: data.url });
       return proxy.Message({
         message: msg,
@@ -240,6 +239,7 @@ export default {
     // 关闭注册对话框
     const closeRegisterDialog = () => {
       changeRegisterVisible(false);
+      proxy.$refs.upload.clearFiles();
       proxy.$refs.registerFormRef.resetFields();
     };
     // 需要在组件销毁的时候关闭所有计时器

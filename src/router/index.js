@@ -7,7 +7,10 @@ const loginFrame = () => import('@/views/login/BlogLogin.vue');
 const musicFrame = () => import('@/views/music/BlogMusic.vue');
 const blogDetail = () => import('@/views/BlogDetail.vue');
 const blogAdmin = () => import('@/views/admin/BlogAdmin.vue');
+const myDetail = () => import('@/views/admin/MyDetail.vue');
+const blogList = () => import('@/views/admin/BlogList.vue');
 const blogEdit = () => import('@/views/admin/BlogEdit.vue');
+const NotFound = () => import('@/components/NotFound.vue');
 
 const routes = [
   {
@@ -15,14 +18,14 @@ const routes = [
     redirect: '/home',
   },
   {
-    path: '/home',
-    name: 'Home',
-    component: blogHome,
-  },
-  {
     path: '/login',
     name: 'Login',
     component: loginFrame,
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    component: blogHome,
   },
   {
     path: '/music',
@@ -38,13 +41,25 @@ const routes = [
     path: '/admin', // 以/开头的嵌套路径将被认为是根路径
     component: blogAdmin,
     name: 'Admin',
-    props: true, // 开启props传参
+    redirect: '/admin/me',
     children: [
       {
-        path: 'edit', component: blogEdit, props: true,
+        path: 'me', name: 'Me', component: myDetail,
+      },
+      {
+        path: 'blogs', name: 'Blogs', component: blogList,
+      },
+      {
+        path: 'edit', name: 'Edit', component: blogEdit,
       },
     ],
   },
+  {
+    path: '/:catchAll(.*)', // Vue3需要使用这种方式来匹配所有路由
+    name: '404',
+    component: NotFound,
+  },
+
 ];
 
 const router = createRouter({
@@ -55,7 +70,7 @@ const router = createRouter({
 // 前置守卫判断用户访问的页面
 router.beforeEach((to, from, next) => {
   if (to.path.startsWith('/admin')) {
-    const token = window.localStorage.getItem('token');
+    const token = window.sessionStorage.getItem('token');
     if (!token) { // 如果用户没有登录则跳转至登录页面
       return next('/login');
     }

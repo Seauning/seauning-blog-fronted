@@ -6,24 +6,24 @@
 <script>
 import MdEditor from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
-import { ref } from 'vue';
+import { ref, toRefs, onMounted } from 'vue';
 
 export default {
   name: 'BlogEdit',
-  // props: ['id'],
+  props: ['id'],
   components: {
     MdEditor,
   },
-  setup() {
-    // const { id } = toRefs(props);
+  setup(props) {
+    const { id } = toRefs(props);
     const text = ref('');
     const theme = 'light';
-    // const getBlogDetail = () => {
-    //   text.value = id.value;
-    // };
-    // onMounted(() => {
-    //   getBlogDetail();
-    // });
+    const getBlogDetail = () => {
+      text.value = id.value;
+    };
+    onMounted(() => {
+      getBlogDetail();
+    });
     return {
       text, theme,
     };

@@ -17,7 +17,7 @@ request.interceptors.request.use(
      * 根据你的项目实际情况来对 config 做处理
      * 这里对 config 不做任何处理，直接返回
      */
-    config.headers.Authorization = window.localStorage.getItem('token');
+    config.headers.Authorization = `Bearer ${window.sessionStorage.getItem('token')}`;
     // if (store.getters.GET_TOKEN) config.headers['User-Token'] = store.GET_TOKEN();
     return config;
   },
@@ -30,10 +30,10 @@ request.interceptors.response.use(
     /**
        * 根据项目实际情况来对 response 和 error 做处理
        */
-    const res = response;
+    const { data } = response;
     // if (code)
     // console.log(data);
-    return Promise.resolve(res.data);
+    return Promise.resolve(data);
   },
   (error) => {
     if (error.response && error.response.data) {

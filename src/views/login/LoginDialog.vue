@@ -15,8 +15,9 @@
         <!-- 用户名 -->
         <el-form-item prop="logusername">
           <el-input v-model="loginForm.logusername"
-                    placeholder="请输入登录名"
-                    prefix-icon="el-icon"></el-input>
+                    placeholder="请输入登录名">
+            <template #prefix></template>
+          </el-input>
           <span class="icon_wrap">
             <svg class="icon iconfont"
                  aria-hidden="true">
@@ -98,7 +99,6 @@ export default {
     const store = useStore();
     console.log(store);
     const router = useRouter();
-
     // 禁止获取图片
     const changeRegisterVisible = inject('changeRegisterVisible');
     // 这是登录表单的数据绑定对象
@@ -119,7 +119,7 @@ export default {
         getImgCounts = 0 && clearTimeout(forbidGetTimer);
       }
       // 每3秒清空一次点击次数
-      forbidGetTimer = setTimeout(reset, 3000); // 此处不能加()否则会立即执行函数体里的内容
+      forbidGetTimer = setTimeout(reset, 2500); // 此处不能加()否则会立即执行函数体里的内容
     };
     // 获取图片验证码
     const getVerifyCode = async () => {
@@ -170,10 +170,11 @@ export default {
       }
       // vuex中存入token（这部分等学了vuex再完善)
       // store.dispatch('setToken', data.token);
-      // store
-      window.localStorage.setItem('token', data.token);
+      // 浏览器已关闭及清除，由于session只能存储字符串，所以需要将session转为字符串存入
+      window.sessionStorage.setItem('user', JSON.stringify(data.userinfo));
+      window.sessionStorage.setItem('token', data.token);
       // 跳转到后台
-      router.push({ name: 'Admin' });
+      router.push('/admin');
       return proxy.Message({ message: '登录成功!!', type: 'success' });
     };
     return {
@@ -235,17 +236,20 @@ export default {
   }
 }
 .login_box {
-  .el-form-item {
+  :deep(.el-form-item) {
     img {
       width: 150px;
       height: 40px;
+    }
+    .el-input__inner {
+      padding: 5px 40px;
     }
     .icon_wrap {
       position: absolute;
       left: 0;
       top: 0;
       display: block;
-      width: 30px;
+      width: 40px;
       height: 40px;
       text-align: center;
       line-height: 47px;
@@ -253,7 +257,7 @@ export default {
       .icon {
         width: 100%;
         height: 100%;
-        padding: 3px;
+        padding: 8px;
         font-size: 18px;
         box-sizing: border-box;
       }
