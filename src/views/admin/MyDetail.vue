@@ -172,12 +172,11 @@ export default {
     });
     // 移除图像
     const handleRemove = (file) => {
-      filelist.value.splice(userInfo.fileList.indexOf(file), 1);
+      filelist.value.splice(filelist.value.indexOf(file), 1);
     };
     // 修改用户信息
     const handleUpdate = async () => {
-      console.log(filelist.value[0]);
-      const avatarUrl = filelist.value[0].url;
+      const avatarUrl = filelist.value[0] ? filelist.value[0].url : null;
       const { code, msg } = await updateUserInfoApi({ ...userInfo, avatarUrl });
       if (code !== 0) {
         return proxy.Message({
@@ -185,7 +184,7 @@ export default {
           type: 'error',
         });
       }
-      userInfo.avatar = avatarUrl;
+      userInfo.avatar = avatarUrl || userInfo.avatar;
       window.sessionStorage.setItem('user', JSON.stringify(userInfo));
       return proxy.Message({
         message: '修改成功',
