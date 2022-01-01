@@ -64,6 +64,7 @@ import {
   reactive,
 } from 'vue';
 import { Message } from '@element-plus/icons';
+import { useRouter } from 'vue-router';
 import { deleteArticleApi } from '@/api/adminApi.js';
 import { myFormateDate, getArticles } from '@/utils/tool.js';
 import AdminMain from '@/components/layout/AdminMain.vue';
@@ -98,11 +99,9 @@ export default {
     });
     // 改变每页大小
     const handleSizeChange = () => {
-
     };
     //
     const handleCurrentChange = () => {
-
     };
     // 获取格式化日期
     const getFormateDate = (row, column, cellValue) => myFormateDate(cellValue);
@@ -115,16 +114,16 @@ export default {
           type: 'error',
         });
       }
+      articleList.splice(articleList.indexOf(row), 1);
       getArticles();
-      Message({
-        message: '删除成功',
-        type: 'success',
-      });
       return true;
     };
+    const router = useRouter();
     // 编辑文章
-    const handleUpdate = (row) => {
-      console.log(row);
+    const handleUpdate = async (row) => {
+      window.sessionStorage.setItem('editArticle', JSON.stringify(row));
+      // 如果使用params传参需要使用name而不是path
+      router.push({ path: '/admin/edit', name: 'Edit' });
     };
     return {
       menuItems,

@@ -49,6 +49,7 @@ export const getArticles = async () => {
   if (code !== 0) {
     Message({
       message: msg,
+      type: 'error',
     });
     return;
   }

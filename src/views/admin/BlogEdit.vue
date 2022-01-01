@@ -101,33 +101,47 @@
 import MdEditor from 'md-editor-v3';
 import { Plus, Delete } from '@element-plus/icons';
 import 'md-editor-v3/lib/style.css';
-import { inject, reactive, ref } from 'vue';
+import {
+  inject, onUnmounted, reactive, ref,
+} from 'vue';
 import { Message, getArticles } from '@/utils/tool.js';
 import AdminMain from '@/components/layout/AdminMain.vue';
-import { postUploadBackgroungImgApi, postArticleApi } from '@/api/adminApi.js';
+import { postUploadBackgroungImgApi, postArticleApi, updateArticleApi } from '@/api/adminApi.js';
 
 export default {
   name: 'BlogEdit',
-  props: ['id'],
   components: {
     MdEditor, AdminMain, Plus, Delete,
   },
   setup() {
+    // markdown主题
     const theme = ref('light');
+    // 有可能是一个空对象，我们并不能直接对他parse，需要做处理
+    const article = JSON.parse(window.sessionStorage.getItem('editArticle')) || {};
     // 编辑表单的实例
     const editFormRef = ref(null);
-    // 编辑表单的内容
-    const editForm = reactive({
+    // 初始值
+    const initFormValue = {
       title: '',
       state: 'byself',
       text: '',
       type: '',
       tag: '',
       url: '',
+    };
+    // 编辑表单的内容
+    let editForm = reactive({
+      title: article.title || initFormValue.title,
+      state: article.state || initFormValue.state,
+      text: article.text || initFormValue.text,
+      type: article.type ? article.type.name : initFormValue.type,
+      tag: article.tag ? article.tag[0].name : initFormValue.tag,
+      url: article.url || initFormValue.url,
     });
     const uploadRef = ref(null);
     // 临时图像列表
     const filelist = ref([]);
+    if (article.bgPath) filelist.value.push({ url: article.bgPath }); // 编辑数据时将当前的url插入
     // tags和types
     const tags = inject('tags');
     const types = inject('types');
@@ -181,6 +195,17 @@ export default {
       filelist.value.push({ name: file.name, url: data.url });
       editForm.url = data.url;
     };
+    // iterators/generators require regenerator-runtime, which is too heavyweight for this guide t
+    // o allow them. Separately, loops should be avoided in favor of array iterations
+    // 情况编辑表单
+    const clearEditForm = () => {
+      // 需要通过forEach的方式来遍历
+      Object.keys(initFormValue).forEach((key) => {
+        editForm[key] = initFormValue[key];
+      });
+      editForm = initFormValue;
+      uploadRef.value.clearFiles();
+    };
     // 发布博客
     const handlePublish = async () => {
       // 校验内容
@@ -190,22 +215,36 @@ export default {
       }
       if (filelist.value.length > 1) return Message({ message: '只允许上传一张图片' });
       // 上传博客内容
-      const { code, msg } = await postArticleApi(editForm);
-      if (code !== 0) {
-        return Message({
-          message: msg,
+      if (JSON.stringify(article) === '{}') { // 表明当前是发布博客
+        const { code, msg } = await postArticleApi(editForm);
+        if (code !== 0) {
+          return Message({
+            message: msg,
+            type: 'error',
+          });
+        }
+        Message({
+          message: '发布成功',
+          type: 'success',
+        });
+      } else { // 表明当前是修改文章
+        const { id: aid } = article;
+        const { code, msg } = await updateArticleApi(editForm, aid);
+        if (code !== 0) {
+          return Message({
+            message: msg,
+            type: 'error',
+          });
+        }
+        Message({
+          message: '修改成功',
+          type: 'success',
         });
       }
       // 清空内容(还原初值)
-      editFormRef.value.resetFields();
-      editForm.text = '';
-      editForm.state = 'byself';
-      uploadRef.value.clearFiles();
+      clearEditForm();
       getArticles();
-      return Message({
-        message: '发布成功',
-        type: 'success',
-      });
+      return true;
     };
     // 图像上传前的校验
     const onBeforeUploadAvatar = (file) => {
@@ -232,6 +271,10 @@ export default {
     const handleRemove = (file) => {
       filelist.value.splice(filelist.value.indexOf(file), 1);
     };
+    // 卸载时清除编辑文章
+    onUnmounted(() => {
+      window.sessionStorage.removeItem('editArticle');
+    });
     return {
       tags,
       types,

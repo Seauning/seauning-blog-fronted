@@ -21,5 +21,8 @@ export const getArticlesUserApi = () => request({
   url: '/articlesSu/',
 });
 
+// 修改文章
+export const updateArticleApi = (params, aid) => request.put(`/articles/${aid}/`, params);
+
 // 删除文章
 export const deleteArticleApi = (aid) => request.delete(`/articles/${aid}/`);

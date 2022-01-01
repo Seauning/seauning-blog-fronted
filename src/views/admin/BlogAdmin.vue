@@ -64,7 +64,7 @@
 
 <script>
 import {
-  onBeforeMount, onMounted, provide, reactive, readonly, ref,
+  onBeforeMount, onMounted, provide, reactive, readonly, ref, watchEffect,
 } from 'vue';
 import { useRouter } from 'vue-router';
 import {
@@ -106,7 +106,11 @@ export default {
     // 是否折叠
     const isCollapse = ref(false);
     // 默认激活的链接
-    const activePath = ref(router.currentRoute.value.path);
+    const activePath = ref('');
+    // 监听router中的path变化
+    watchEffect(() => {
+      activePath.value = router.currentRoute.value.path;
+    });
     // 获取用户信息，将存储在session中的信息转为JSON数据
     const userinfo = reactive(JSON.parse(window.sessionStorage.getItem('user')));
     provide('userinfo', userinfo);
@@ -130,7 +134,6 @@ export default {
     provide('types', readonly(types));
     // 获取博客文章数据
     // let articles = reactive([]);
-
     // provide('articles', articles);
     const goHome = (v) => {
       if (!v) window.sessionStorage.clear();
