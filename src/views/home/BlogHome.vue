@@ -1,14 +1,16 @@
 <template>
-  <div class="main">
+  <div class="main"
+       v-cloak>
     <div class="home_header"
          ref="headerRef">
       <div class="header_content">
         <div class="header_text animate__animated animate__zoomInUp">首页</div>
         <div class="blogger_detail animate__animated animate__zoomInUp">
-          <a href="#"><i class="iconfont icon-github"></i></a>
-          <a href="#"
+          <a href="https://gitee.com/zeng-shaocheng"
+             target="_blank"><i class="iconfont icon-github"></i></a>
+          <a href="javascript::void(0)"
              title="lightsme"><i class="iconfont icon-weixin"></i></a>
-          <a href="#"
+          <a href="javascript::void(0)"
              title="1648449524"><i class="iconfont icon-qq"></i></a>
         </div>
       </div>
@@ -33,9 +35,9 @@
 </template>
 
 <script>
-import { ArrowDownBold } from '@element-plus/icons';
+import { ArrowDownBold, Message } from '@element-plus/icons';
 import {
-  onBeforeMount, reactive, ref,
+  ref,
 } from 'vue';
 import { getAllArticlesApi } from '@/api/homeApi.js';
 import HomeBlogs from '@/views/home/HomeBlogs.vue';
@@ -47,10 +49,15 @@ export default {
   components: {
     HomeBlogs, HomeCategory, HomeTag, ArrowDownBold,
   },
+  data() {
+    return {
+      articles: [],
+    };
+  },
   setup() {
-    let articles = [];
     // 头部标题的ref
     const headerRef = ref(null);
+    // 向下滚动
     const rollDown = () => {
       // 获取页面卷曲高度
       const scrollHeight = window.pageYOffset;
@@ -65,15 +72,52 @@ export default {
         behavior: 'smooth',
       });
     };
-    onBeforeMount(async () => {
-      const { data } = await getAllArticlesApi();
-      articles = reactive(data);
-    });
+    // let articles = reactive([]);
+    // const getArticleList = async () => {
+    //   const { code, msg, data } = await getAllArticlesApi();
+    //   if (code !== 0) {
+    //     Message({
+    //       message: msg,
+    //       type: 'error',
+    //     });
+    //     return;
+    //   }
+    //   articles = data;
+    // };
+
+    // onBeforeCreate(async () => {
+    //   const { code, msg, data } = await getAllArticlesApi();
+    //   if (code !== 0) {
+    //     Message({
+    //       message: msg,
+    //       type: 'error',
+    //     });
+    //     return;
+    //   }
+    //   articles = reactive(data);
+    // });
     return {
+      // articles,
       rollDown,
       headerRef,
-      articles,
     };
+  },
+  methods: {
+    async getArticleList() {
+      const { code, msg, data } = await getAllArticlesApi();
+      if (code !== 0) {
+        Message({
+          message: msg,
+          type: 'error',
+        });
+        return;
+      }
+      this.articles = data;
+      this.articles = [...this.articles, ...this.articles];
+    },
+  },
+  created() {
+    this.getArticleList();
   },
 };
 </script>

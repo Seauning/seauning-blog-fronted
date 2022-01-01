@@ -50,31 +50,11 @@ axios.interceptors.response.use(
   },
 );
 
-// 封装数据返回成功提示函数
-function successState(res) {
-  const { code } = res.data;
-  // 当code是400，或者500时直接提示错误信息
-  if (code === 400 || code === 500) {
-    Message({
-      message: res.data.msg,
-      type: 'error',
-    });
-  }
-  //  else if (code == 10007) {
-  //   iView.Message.error('长时间未操作，需要重新登录！', 1);
-  //   router.replace({
-  //     name: 'login',
-  //   });
-  // }
-  return res;
-}
-
 // 封装axios
 function request(http) {
   return new Promise((resolve, reject) => {
     // 此处的.then属于axios
     axios(http).then((res) => {
-      successState(res);
       resolve(res.data);
     }).catch((response) => {
       reject(response);

@@ -3,23 +3,26 @@
   <div class="my_card">
     <div class="card_header hover-shadow">
       <span class="title">博客</span>
-      <span>共<span class="number">{{articleList.length}}</span>篇</span>
+      <span>共<span class="number">{{this.articleList.length}}</span>篇</span>
     </div>
     <div class="home_blogs hover-shadow">
-      <blog-article v-for="item in articleList"
-                    :key="item.id"></blog-article>
+      <blog-article v-for="item in getFixArticles"
+                    :key="item.id"
+                    :article="item"></blog-article>
     </div>
     <div class="card_footer hover-shadow">
-      <my-pagination :totalSize="articleList.length"
-                     @getPageSize="getPageSize"></my-pagination>
+      <my-pagination :totalSize="this.articleList.length"
+                     :pageSize="3"
+                     @getPageSize="getPageSize"
+                     @getCurrentPage="getCurrentPage"></my-pagination>
     </div>
   </div>
 </template>
 
 <script>
-import {
+/* import {
   provide, ref,
-} from 'vue';
+} from 'vue'; */
 import BlogArticle from './BlogArticle.vue';
 
 export default {
@@ -29,7 +32,7 @@ export default {
       required: true,
     },
   },
-  setup() {
+  /*  setup() {
     // 用ref创建原始值的响应对象，用reactive创建[],{}的响应对象
     const current = ref(1);
     provide('current', current);
@@ -42,6 +45,25 @@ export default {
       pageSize,
       getPageSize,
     };
+  }, */
+  data() {
+    return {
+      current: 1,
+      pageSize: 0,
+    };
+  },
+  methods: {
+    getPageSize(data) {
+      this.pageSize = data;
+    },
+    getCurrentPage(data) {
+      this.current = data;
+    },
+  },
+  computed: {
+    getFixArticles() {
+      return this.articleList.slice(3);
+    },
   },
   components: {
     BlogArticle,

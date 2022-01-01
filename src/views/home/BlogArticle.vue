@@ -4,10 +4,9 @@
       <router-link to="/blog"
                    class="a_underline">
         <div class="article_content">
-          <h1 class="article_title">入站须知入站须知入站须知入站须知入站须知</h1>
+          <h1 class="article_title">{{article.title}}</h1>
           <p class="article_desc text_moh">
-            如何获取源码地址？入站有什么注意事项?进来便知!
-            如何获取源码地址？入站有什么注意事项?进来便知!
+            {{article.text}}
           </p>
         </div>
       </router-link>
@@ -23,24 +22,25 @@
           </router-link>
           <span class="article_date_wrap">
             <i class="iconfont icon-rili"></i>
-            <span class="article_date">2021-02-03 20:00</span>
+            <span class="article_date">{{formateDate}}</span>
           </span>
           <span class="article_views_wrap">
             <i class="iconfont icon-guankan_guankan"></i>
-            <span class="article_views">525</span>
+            <span class="article_views">{{article.views}}</span>
           </span>
         </div>
         <div class="right_wrap">
           <router-link to="#"
-                       class="a_underline article_tag">生活</router-link>
-          <router-link to="#"
-                       class="a_underline article_tag">科技</router-link>
+                       class="a_underline article_tag"
+                       v-for="tag in article.tag"
+                       :key="tag.name">{{tag.value}}</router-link>
         </div>
       </div>
     </div>
-    <div class="img_wrap">
+    <div class="img_wrap"
+         v-if="article.bgPath !== ''">
       <router-link to="/blog">
-        <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+        <img :src="article.bgPath"
              class="image" />
       </router-link>
     </div>
@@ -48,8 +48,21 @@
 </template>
 
 <script>
+import { myFormateDate } from '@/utils/tool.js';
+
 export default {
   name: 'BlogArticle',
+  props: {
+    article: {
+      type: Object,
+      required: true,
+    },
+  },
+  computed: {
+    formateDate() {
+      return myFormateDate(this.article.createdTime);
+    },
+  },
 };
 </script>
 

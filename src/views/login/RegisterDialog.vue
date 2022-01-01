@@ -137,7 +137,7 @@ export default {
     const getsmsVerifyCode = () => {
       // 在表单项中进行手机号校验
       proxy.$refs.registerFormRef.validateField('phone', async (pass) => {
-        const phoneValidRes = pass === ''; // 判断是2否通过验证
+        const phoneValidRes = pass === ''; // 判断是否通过验证
         if (!phoneValidRes) {
           return false;
         }

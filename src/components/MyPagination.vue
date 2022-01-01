@@ -32,9 +32,9 @@
 </template>
 
 <script>
-import {
+/* import {
   inject, ref, toRefs, watch,
-} from 'vue';
+} from 'vue'; */
 
 export default {
   name: 'MyPagination',
@@ -45,20 +45,10 @@ export default {
       type: Number,
       required: true,
     },
-  },
-  setup(props, content) {
-    // 1.如果需要结构props通过toRefs使其不失去响应性，转化为ref后响应访问它的值需要通过.value
-    const { totalSize } = toRefs(props);
-    const pageSize = ref(3);
-    const totalPage = ref(Math.ceil(totalSize.value / pageSize.value));
-    content.emit('getPageSize', pageSize);
-    // 2.在父组件中使用protect在子组件中使用inject可以实现父向子响应式传值(在子组件中更改值父组件也会改变)
-    const current = inject('current');
-    watch(current, (newV, oldV) => {
-      console.log(newV, oldV);
-    });
-    // 这里返回的current虽然时ref但是会自动解包所以在templates中无需.value
-    return { totalPage, current };
+    pageSize: {
+      type: Number,
+      default: 3,
+    },
   },
   data() {
     return {
@@ -66,8 +56,28 @@ export default {
         type: Number,
         default: 1,
       },
+      totalPage: this.totalSize / this.pageSize,
+      current: 1,
     };
   },
+  /* setup(props, context) {
+    // 1.如果需要结构props通过toRefs使其不失去响应性，转化为ref后响应访问它的值需要通过.value
+    const { totalSize } = toRefs(props);
+    const pageSize = ref(3);
+    const totalPage = ref(Math.ceil(totalSize.value / pageSize.value));
+    console.log(totalPage.value, Math.ceil(totalSize.value / pageSize.value));
+    context.emit('getPageSize', pageSize);
+    // 2.在父组件中使用protect在子组件中使用inject可以实现父向子响应式传值(在子组件中更改值父组件也会改变)
+    const current = inject('current');
+    watch(current, (newV, oldV) => {
+      console.log(newV, oldV);
+    });
+    // 这里返回的current虽然时ref但是会自动解包所以在templates中无需.value
+    return {
+      totalPage,
+      current,
+    };
+  }, */
   methods: {
     changePage(v) {
       if ((v < 0 && this.current > 1 && this.current <= this.totalPage)
@@ -75,6 +85,14 @@ export default {
         this.current += v;
       }
     },
+  },
+  watch: {
+    current(newV) {
+      this.$emits('getCurrentPage', newV);
+    },
+  },
+  mounted() {
+    this.$emit('getPageSize', this.pageSize);
   },
 };
 </script>
