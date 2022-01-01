@@ -29,8 +29,8 @@
             <el-select v-model="editForm.type"
                        placeholder="分类">
               <el-option v-for="(item, index) in types"
-                         :label="item.name"
-                         :value="item.value"
+                         :label="item.value"
+                         :value="item.name"
                          :key="index">
               </el-option>
             </el-select>
@@ -40,8 +40,8 @@
             <el-select v-model="editForm.tag"
                        placeholder="标签">
               <el-option v-for="(item, index) in tags"
-                         :label="item.name"
-                         :value="item.value"
+                         :label="item.value"
+                         :value="item.name"
                          :key="index">
               </el-option>
             </el-select>
@@ -125,7 +125,7 @@ export default {
       title: '',
       state: 'byself',
       text: '',
-      type: '',
+      type: 'learnlog',
       tag: '',
       url: '',
     };
@@ -141,7 +141,9 @@ export default {
     const uploadRef = ref(null);
     // 临时图像列表
     const filelist = ref([]);
-    if (article.bgPath) filelist.value.push({ url: article.bgPath }); // 编辑数据时将当前的url插入
+    if (article.bgPath || article.url) { // 编辑数据时将当前的url插入
+      filelist.value.push({ url: article.bgPath || article.url });
+    }
     // tags和types
     const tags = inject('tags');
     const types = inject('types');
@@ -174,9 +176,15 @@ export default {
         },
       ],
     ];
-    // 暂存博客(尚未实现)
+    // 暂存博客(目前只是保存在localStorage中)笑哭这样的存储方式所有用户都能访问，哈哈哈哈后面在写
     const handleSave = () => {
-
+      const articles = JSON.parse(window.localStorage.getItem('draftArticles') || '[]');
+      articles.push(editForm);
+      window.localStorage.setItem('draftArticles', JSON.stringify(articles));
+      Message({
+        message: '保存成功',
+        type: 'success',
+      });
     };
     // 上传首页图片
     const uploadBackgroundImg = async (params) => {
@@ -215,7 +223,7 @@ export default {
       }
       if (filelist.value.length > 1) return Message({ message: '只允许上传一张图片' });
       // 上传博客内容
-      if (JSON.stringify(article) === '{}') { // 表明当前是发布博客
+      if (JSON.stringify(article) === '{}' || !('id' in article)) { // 表明当前是发布博客
         const { code, msg } = await postArticleApi(editForm);
         if (code !== 0) {
           return Message({

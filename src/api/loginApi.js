@@ -1,8 +1,14 @@
 import request from '@/utils/axios.js';
 
-export const getUsernameCountApi = (username) => request.get(`/usernames/${username}/count/`);
+export const getUsernameCountApi = (username) => request({
+  method: 'get',
+  url: `/usernames/${username}/count/`,
+});
 
-export const getPhoneCountApi = (phone) => request.get(`/phones/${phone}/count/`);
+export const getPhoneCountApi = (phone) => request({
+  method: 'get',
+  url: `/phones/${phone}/count/`,
+});
 
 // 二进制流数组转为base64类型
 function arrayBufferToBase64(buffer) {
@@ -26,6 +32,10 @@ export const getImgCodeApi = async (uuid) => {
 };
 
 // 登录用户校验
-export const postCheckUserApi = (params) => request.post('/login/', {
-  ...params,
+export const postCheckUserApi = (params) => request({
+  method: 'post',
+  url: '/login/',
+  data: {
+    ...params,
+  },
 });

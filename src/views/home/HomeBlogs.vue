@@ -3,14 +3,14 @@
   <div class="my_card">
     <div class="card_header hover-shadow">
       <span class="title">博客</span>
-      <span class="">共<span class="number">{{articles.length}}</span>篇</span>
+      <span>共<span class="number">{{articleList.length}}</span>篇</span>
     </div>
     <div class="home_blogs hover-shadow">
-      <blog-article v-for="(item, i) in pageSize"
-                    :key="i"></blog-article>
+      <blog-article v-for="item in articleList"
+                    :key="item.id"></blog-article>
     </div>
     <div class="card_footer hover-shadow">
-      <my-pagination :totalSize="articles.length"
+      <my-pagination :totalSize="articleList.length"
                      @getPageSize="getPageSize"></my-pagination>
     </div>
   </div>
@@ -23,9 +23,13 @@ import {
 import BlogArticle from './BlogArticle.vue';
 
 export default {
+  props: {
+    articleList: {
+      type: Array,
+      required: true,
+    },
+  },
   setup() {
-    // 文章列表在首页中不能改变，所以不是响应式的(后续可以将响应的文章列表挂载到vuex上，以便在其他页面中修改时首页的数据也会动态修改)
-    const articles = [1, 2, 3, 4, 6, 7, 10]; // 在此处通过axios获取后端的值(此处模拟)
     // 用ref创建原始值的响应对象，用reactive创建[],{}的响应对象
     const current = ref(1);
     provide('current', current);
@@ -35,7 +39,6 @@ export default {
     };
     // 想要在当前页面到的templates中使用的数据记得返回，否则templates找不到
     return {
-      articles,
       pageSize,
       getPageSize,
     };

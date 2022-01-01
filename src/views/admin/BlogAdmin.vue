@@ -64,7 +64,7 @@
 
 <script>
 import {
-  onBeforeMount, onMounted, provide, reactive, readonly, ref, watchEffect,
+  onBeforeMount, provide, reactive, readonly, ref, watchEffect,
 } from 'vue';
 import { useRouter } from 'vue-router';
 import {
@@ -99,6 +99,7 @@ export default {
         children: [
           { id: 21, index: '/admin/blogs', title: '博客列表' },
           { id: 22, index: '/admin/edit', title: '发布博客' },
+          { id: 22, index: '/admin/draft', title: '我的草稿' },
         ],
       },
     ];
@@ -144,8 +145,6 @@ export default {
     onBeforeMount(() => {
       getTagsTypesData();
       getArticles();
-    });
-    onMounted(() => {
     });
     return {
       menu,

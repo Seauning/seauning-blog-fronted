@@ -1,8 +1,15 @@
 import request from '@/utils/axios.js';
 
-export const getSmscodeApi = (phone) => request.get(`/sms_codes/${phone}/`);
+export const getSmscodeApi = (phone) => request({
+  method: 'get',
+  url: `/sms_codes/${phone}/`,
+});
 
-export const postUploadAvatarApi = (file) => request.post('/upload/avatar/', file);
+export const postUploadAvatarApi = (file) => request({
+  method: 'post',
+  url: '/upload/avatar/',
+  data: file,
+});
 
 export const postRegisterUserApi = (
   username,
@@ -10,10 +17,14 @@ export const postRegisterUserApi = (
   phone,
   smsVerifyCode,
   avatar,
-) => request.post('/register/', {
-  username,
-  password,
-  phone,
-  smsVerifyCode,
-  avatar,
+) => request({
+  method: 'post',
+  url: '/register/',
+  data: {
+    username,
+    password,
+    phone,
+    smsVerifyCode,
+    avatar,
+  },
 });

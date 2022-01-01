@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="home_header"
-         ref="header_ref">
+         ref="headerRef">
       <div class="header_content">
         <div class="header_text animate__animated animate__zoomInUp">首页</div>
         <div class="blogger_detail animate__animated animate__zoomInUp">
@@ -21,7 +21,7 @@
     </div>
     <div class="home_mess cl">
       <div class="left_mess">
-        <home-blogs></home-blogs>
+        <home-blogs :articleList="articles"></home-blogs>
       </div>
       <div class="right_mess">
         <home-category></home-category>
@@ -34,7 +34,10 @@
 
 <script>
 import { ArrowDownBold } from '@element-plus/icons';
-import { getCurrentInstance } from 'vue';
+import {
+  onBeforeMount, reactive, ref,
+} from 'vue';
+import { getAllArticlesApi } from '@/api/homeApi.js';
 import HomeBlogs from '@/views/home/HomeBlogs.vue';
 import HomeCategory from '@/views/home/HomeCategory.vue';
 import HomeTag from '@/views/home/HomeTag.vue';
@@ -45,12 +48,14 @@ export default {
     HomeBlogs, HomeCategory, HomeTag, ArrowDownBold,
   },
   setup() {
-    const { proxy } = getCurrentInstance();
+    let articles = [];
+    // 头部标题的ref
+    const headerRef = ref(null);
     const rollDown = () => {
       // 获取页面卷曲高度
       const scrollHeight = window.pageYOffset;
       // 获取头部图片的高度
-      const headerHeight = proxy.$refs.header_ref.clientHeight;
+      const headerHeight = headerRef.value.clientHeight;
       // scrollBy按指定的偏移量进行滚动,
       // 参数top，behavior
       // top滚动的距离
@@ -60,8 +65,14 @@ export default {
         behavior: 'smooth',
       });
     };
+    onBeforeMount(async () => {
+      const { data } = await getAllArticlesApi();
+      articles = reactive(data);
+    });
     return {
       rollDown,
+      headerRef,
+      articles,
     };
   },
 };

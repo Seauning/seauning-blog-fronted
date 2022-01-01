@@ -10,6 +10,7 @@ const blogAdmin = () => import('@/views/admin/BlogAdmin.vue');
 const myDetail = () => import('@/views/admin/MyDetail.vue');
 const blogList = () => import('@/views/admin/BlogList.vue');
 const blogEdit = () => import('@/views/admin/BlogEdit.vue');
+const myDraft = () => import('@/views/admin/MyDraft.vue');
 const NotFound = () => import('@/components/NotFound.vue');
 
 const routes = [
@@ -51,6 +52,9 @@ const routes = [
       },
       {
         path: 'edit', name: 'Edit', component: blogEdit,
+      },
+      {
+        path: 'draft', name: 'Draft', component: myDraft,
       },
     ],
   },
