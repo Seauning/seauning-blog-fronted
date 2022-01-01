@@ -51,8 +51,8 @@
         </el-button>
       </div>
     </div>
+    <blog-record></blog-record>
   </div>
-  <blog-record></blog-record>
 </template>
 
 <script>
@@ -74,6 +74,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// 添加这个代码会导致浏览器的html高度100%失效
 .main {
   height: 100%;
 }

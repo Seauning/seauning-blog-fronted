@@ -63,11 +63,15 @@
 </template>
 
 <script>
-import { provide, reactive, ref } from 'vue';
+import {
+  onBeforeMount, onMounted, provide, reactive, readonly, ref,
+} from 'vue';
 import { useRouter } from 'vue-router';
 import {
   HomeFilled, Edit, Avatar,
 } from '@element-plus/icons';
+import { getTagTypesApi } from '@/api/adminApi.js';
+import { Message, getArticles } from '@/utils/tool.js';
 
 export default {
   name: 'BlogAdmin',
@@ -106,12 +110,40 @@ export default {
     // 获取用户信息，将存储在session中的信息转为JSON数据
     const userinfo = reactive(JSON.parse(window.sessionStorage.getItem('user')));
     provide('userinfo', userinfo);
+    // 获取标签及列表的数据
+    const tags = ref([]);
+    const types = ref([]);
+    const getTagsTypesData = async () => {
+      const { code, msg, data } = await getTagTypesApi();
+      if (code !== 0) {
+        return Message({
+          message: msg,
+        });
+      }
+      tags.value = data.tags;
+      // 注意不能直接在data.tags后splice，splice会返回切割后的数组
+      tags.value.splice(0, 1);
+      types.value = data.types;
+      return true;
+    };
+    provide('tags', readonly(tags));
+    provide('types', readonly(types));
+    // 获取博客文章数据
+    // let articles = reactive([]);
+
+    // provide('articles', articles);
     const goHome = (v) => {
       if (!v) window.sessionStorage.clear();
       router.push({
         name: 'Home',
       });
     };
+    onBeforeMount(() => {
+      getTagsTypesData();
+      getArticles();
+    });
+    onMounted(() => {
+    });
     return {
       menu,
       isCollapse,

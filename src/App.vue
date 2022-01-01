@@ -15,9 +15,9 @@ const homeNavItems = [
   {
     id: 0, name: '首页', url: '/home', icon: 'icon-shouye',
   },
-  {
-    id: 1, name: '音乐', url: '/music', icon: 'icon-yinle1',
-  },
+  // {
+  //   id: 1, name: '音乐', url: '/music', icon: 'icon-yinle1',
+  // },
   {
     id: 2, name: '登录', url: '/login', icon: 'icon-geren',
   },

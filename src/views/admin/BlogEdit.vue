@@ -10,8 +10,7 @@
           <el-input v-model="editForm.title"
                     placeholder="请输入标题"></el-input>
         </el-form-item>
-        <el-form-item prop="title"
-                      class="blog_state">
+        <el-form-item class="blog_state">
           <el-select v-model="editForm.state"
                      placeholder="原创">
             <el-option label="原创"
@@ -29,20 +28,22 @@
                         class="blog_type">
             <el-select v-model="editForm.type"
                        placeholder="分类">
-              <el-option label="学习日志"
-                         value="learnLog"></el-option>
-              <el-option label="生活"
-                         value="life"></el-option>
+              <el-option v-for="(item, index) in types"
+                         :label="item.name"
+                         :value="item.value"
+                         :key="index">
+              </el-option>
             </el-select>
           </el-form-item>
           <el-form-item prop="tag"
                         class="blog_tag">
             <el-select v-model="editForm.tag"
                        placeholder="标签">
-              <el-option label="Vue"
-                         value="vue"></el-option>
-              <el-option label="Js"
-                         value="javascript"></el-option>
+              <el-option v-for="(item, index) in tags"
+                         :label="item.name"
+                         :value="item.value"
+                         :key="index">
+              </el-option>
             </el-select>
           </el-form-item>
         </div>
@@ -50,8 +51,9 @@
           <el-upload ref="uploadRef"
                      class="upload"
                      action="#"
+                     :auto-upload="true"
                      list-type="picture-card"
-                     :auto-upload="false"
+                     :file-list="filelist"
                      :http-request="uploadBackgroundImg"
                      :before-upload="onBeforeUploadAvatar">
             <template #default>
@@ -59,10 +61,10 @@
                 <plus />
               </el-icon>
             </template>
-            <template #file="{ file }">
+            <template #file="{ file:cfile }">
               <div>
                 <img class="el-upload-list__item-thumbnail"
-                     :src="file.url"
+                     :src="cfile.url"
                      alt="" />
                 <span class="el-upload-list__item-actions">
                   <!-- 放大功能后续完善 -->
@@ -74,7 +76,7 @@
                     </el-icon>
                   </span> -->
                   <span class="el-upload-list__item-delete"
-                        @click="handleRemove(file)">
+                        @click="handleRemove(cfile)">
                     <el-icon>
                       <delete />
                     </el-icon>
@@ -99,10 +101,10 @@
 import MdEditor from 'md-editor-v3';
 import { Plus, Delete } from '@element-plus/icons';
 import 'md-editor-v3/lib/style.css';
-import { reactive, ref } from 'vue';
-import { Message } from '@/utils/tool.js';
+import { inject, reactive, ref } from 'vue';
+import { Message, getArticles } from '@/utils/tool.js';
 import AdminMain from '@/components/layout/AdminMain.vue';
-import { postUploadBackgroungImgApi } from '@/api/adminApi.js';
+import { postUploadBackgroungImgApi, postArticleApi } from '@/api/adminApi.js';
 
 export default {
   name: 'BlogEdit',
@@ -111,17 +113,24 @@ export default {
     MdEditor, AdminMain, Plus, Delete,
   },
   setup() {
-    // const { id } = toRefs(props);
+    const theme = ref('light');
     // 编辑表单的实例
     const editFormRef = ref(null);
     // 编辑表单的内容
     const editForm = reactive({
       title: '',
-      state: '',
+      state: 'byself',
       text: '',
+      type: '',
+      tag: '',
+      url: '',
     });
     const uploadRef = ref(null);
-    const fileInstance = ref(null);
+    // 临时图像列表
+    const filelist = ref([]);
+    // tags和types
+    const tags = inject('tags');
+    const types = inject('types');
     const formRules = {
       title: [
         {
@@ -131,8 +140,12 @@ export default {
           min: 2, message: '标题长度不小于2个字', trigger: 'blur',
         },
       ],
+      text: [
+        {
+          min: 1, message: '您还未编写任何内容', trigger: 'blur',
+        },
+      ],
     };
-    const theme = 'light';
     // 头部面包屑菜单
     const menuItems = [
       {
@@ -147,13 +160,52 @@ export default {
         },
       ],
     ];
-    // 暂存博客
+    // 暂存博客(尚未实现)
     const handleSave = () => {
 
     };
+    // 上传首页图片
+    const uploadBackgroundImg = async (params) => {
+      // 图片上传
+      const form = new FormData();
+      const { file } = params;
+      form.append('file', file);
+      const { code, data, msg } = await postUploadBackgroungImgApi(form);
+      if (code !== 0) {
+        Message({
+          message: msg,
+        });
+        return;
+      }
+      // 将头像载入临时url
+      filelist.value.push({ name: file.name, url: data.url });
+      editForm.url = data.url;
+    };
     // 发布博客
-    const handlePublish = () => {
-      uploadRef.value.submit();
+    const handlePublish = async () => {
+      // 校验内容
+      const result = editFormRef.value.validate().catch((err) => err);
+      if (!result) {
+        return false;
+      }
+      if (filelist.value.length > 1) return Message({ message: '只允许上传一张图片' });
+      // 上传博客内容
+      const { code, msg } = await postArticleApi(editForm);
+      if (code !== 0) {
+        return Message({
+          message: msg,
+        });
+      }
+      // 清空内容(还原初值)
+      editFormRef.value.resetFields();
+      editForm.text = '';
+      editForm.state = 'byself';
+      uploadRef.value.clearFiles();
+      getArticles();
+      return Message({
+        message: '发布成功',
+        type: 'success',
+      });
     };
     // 图像上传前的校验
     const onBeforeUploadAvatar = (file) => {
@@ -176,39 +228,20 @@ export default {
       }
       return isImg && isLt2M;
     };
-    // 上传首页图片(当我们调用upload.submit方法时会调用绑定在http-request上的函数，及自定义上传)
-    const uploadBackgroundImg = async (params) => {
-      // 1.图片处理
-      const { file } = params;
-      // 2.图片上传
-      const form = new FormData();
-      form.append('file', file);
-      const { code, data, msg } = await postUploadBackgroungImgApi(form);
-      if (code !== 0) {
-        return Message({
-          message: msg,
-          type: 'error',
-        });
-      }
-      console.log(data);
-      // 将头像载入临时url
-      fileInstance.value = file;
-      return Message({
-        message: '添加成功',
-        type: 'success',
-      });
-    };
+    // 移除文件
     const handleRemove = (file) => {
-      console.log(fileInstance.value);
-      if (fileInstance.value === file) { fileInstance.value = null; }
+      filelist.value.splice(filelist.value.indexOf(file), 1);
     };
     return {
+      tags,
+      types,
       formRules,
       editForm,
       theme,
       menuItems,
       editFormRef,
       uploadRef,
+      filelist,
       handleSave,
       handlePublish,
       handleRemove,
