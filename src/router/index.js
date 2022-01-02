@@ -5,7 +5,7 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 const blogHome = () => import('@/views/home/BlogHome.vue');
 const loginFrame = () => import('@/views/login/BlogLogin.vue');
 const musicFrame = () => import('@/views/music/BlogMusic.vue');
-const blogDetail = () => import('@/views/BlogDetail.vue');
+const articleDetail = () => import('@/views/ArticleDetail.vue');
 const blogAdmin = () => import('@/views/admin/BlogAdmin.vue');
 const myDetail = () => import('@/views/admin/MyDetail.vue');
 const blogList = () => import('@/views/admin/BlogList.vue');
@@ -34,9 +34,10 @@ const routes = [
     component: musicFrame,
   },
   {
-    path: '/blog',
+    path: '/blog/:id',
     name: 'Blog',
-    component: blogDetail,
+    component: articleDetail,
+    props: true,
   },
   {
     path: '/admin', // 以/开头的嵌套路径将被认为是根路径

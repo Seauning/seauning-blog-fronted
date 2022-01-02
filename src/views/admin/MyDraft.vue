@@ -80,9 +80,8 @@ export default {
     // 删除该文章
     const handleDelete = (row) => {
       // 从草稿文章中删除
-      const articles = JSON.parse(window.localStorage.getItem('draftArticles') || '[]');
-      articles.splice(articles.indexOf(row), 1);
-      window.localStorage.setItem('draftArticles', JSON.stringify(articles));
+      articleList.splice(articleList.indexOf(row), 1);
+      window.localStorage.setItem('draftArticles', JSON.stringify(articleList));
     };
     const router = useRouter();
     // 编辑文章

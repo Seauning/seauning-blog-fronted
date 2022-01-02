@@ -24,7 +24,6 @@
                      :theme="theme"
                      :showCodeRowNumber="true"
                      @onSave="handleSave"
-                     @onHtmlChanged="handleSaveHtml"
                      @onUploadImg="handleuUploadArticleImg"></md-editor>
         </el-form-item>
         <div class="cl">
@@ -51,6 +50,10 @@
             </el-select>
           </el-form-item>
         </div>
+        <el-form-item prop="digest">
+          <el-input v-model="editForm.digest"
+                    placeholder="请输入摘要"></el-input>
+        </el-form-item>
         <el-form-item>
           <el-upload ref="uploadRef"
                      class="upload"
@@ -130,6 +133,7 @@ export default {
     const initFormValue = {
       title: '',
       state: 'byself',
+      digest: '',
       text: '',
       type: 'learnlog',
       tag: '',
@@ -139,6 +143,7 @@ export default {
     let editForm = reactive({
       title: article.title || initFormValue.title,
       state: article.state || initFormValue.state,
+      digest: article.digest || initFormValue.digest,
       text: article.text || initFormValue.text,
       type: article.type ? article.type.name : initFormValue.type,
       tag: article.tag ? article.tag[0].name : initFormValue.tag,
@@ -160,6 +165,11 @@ export default {
         },
         {
           min: 2, message: '标题长度不小于2个字', trigger: 'blur',
+        },
+      ],
+      digest: [
+        {
+          message: '通过添加文章摘要，有助于读者了解大致内容',
         },
       ],
       text: [
@@ -219,13 +229,12 @@ export default {
             .catch((error) => reject(error));
         })),
       );
-      console.log(res);
       cb(res.map((item) => item.data.url));
     };
-    // 保存html
-    const handleSaveHtml = (html) => {
+    // 保存html(该功能暂不需要)
+    /*     const handleSaveHtml = (html) => {
       console.log(html);
-    };
+    }; */
     // iterators/generators require regenerator-runtime, which is too heavyweight for this guide t
     // o allow them. Separately, loops should be avoided in favor of array iterations
     // 情况编辑表单
@@ -322,7 +331,7 @@ export default {
       onBeforeUploadAvatar,
       uploadBackgroundImg,
       handleuUploadArticleImg,
-      handleSaveHtml,
+      // handleSaveHtml,
     };
   },
 };

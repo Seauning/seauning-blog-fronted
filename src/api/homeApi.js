@@ -8,4 +8,17 @@ export function getAllArticlesApi() {
   return data;
 }
 
-export const aa = () => { };
+export function getCurrentArticleApi(id) {
+  return request({
+    method: 'get',
+    url: `/article/${id}`,
+  });
+}
+
+export function updateViewsApi(aid, views) {
+  return request({
+    method: 'post',
+    url: '/article/',
+    data: { id: aid, views },
+  });
+}

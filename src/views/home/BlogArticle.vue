@@ -1,23 +1,23 @@
 <template>
   <div class="blog_item">
     <div class="blog_article">
-      <router-link to="/blog"
+      <router-link :to="`/blog/${article.id}`"
                    class="a_underline">
         <div class="article_content">
           <h1 class="article_title">{{article.title}}</h1>
           <p class="article_desc text_moh">
-            {{article.text}}
+            {{article.digest}}
           </p>
         </div>
       </router-link>
       <div class="user_info">
         <div class="left_wrap">
-          <router-link to="#"
+          <router-link :to="`/blog/${article.id}`"
                        class="avatar_wrap a_underline">
             <img class="user_avatar"
-                 src="../../assets/imgs/avatar.jpg" />
+                 :src="article.user.avatar" />
             <span class="user_name">
-              Seauning
+              {{article.user.usernname}}
             </span>
           </router-link>
           <span class="article_date_wrap">
@@ -40,7 +40,7 @@
     </div>
     <div class="img_wrap"
          v-if="article.bgPath !== ''">
-      <router-link to="/blog">
+      <router-link :to="`/blog/${article.id}`">
         <img :src="article.bgPath"
              class="image" />
       </router-link>
@@ -78,19 +78,19 @@ export default {
   border-bottom: 1px solid #e4e7ed;
   font-size: 20px;
   .blog_article {
+    flex: 7;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 25em;
-    height: 100%;
     padding: 0 5px;
     margin-right: 30px;
     box-sizing: border-box;
   }
   .img_wrap {
+    flex: 3;
     display: flex;
     align-items: center;
-    width: 12em;
+    // width: 12em;
     box-sizing: border-box;
     a {
       display: block;
@@ -118,6 +118,7 @@ export default {
       margin-bottom: 20px;
     }
     .article_desc {
+      width: 6rem;
       color: $color777;
       font-size: 16px;
       margin-bottom: 20px;
@@ -147,6 +148,7 @@ export default {
     color: $color0e83d1;
     .user_avatar {
       width: 25px;
+      height: 25px;
       border-radius: 50%;
       vertical-align: middle;
     }
@@ -189,6 +191,9 @@ export default {
       padding-top: 20px;
       .article_content {
         margin-bottom: 20px;
+        .article_desc {
+          width: 100%;
+        }
       }
     }
     .img_wrap {

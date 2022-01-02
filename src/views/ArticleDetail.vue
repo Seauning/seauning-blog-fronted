@@ -5,34 +5,35 @@
         博客详情
       </h1>
     </div>
-    <div class="blog_detail_body animate__animated animate__lightSpeedInLeft">
+    <div class="blog_detail_body animate__animated animate__slideInRight">
       <div class="body_header">
         <router-link to="#"
                      class="user_link">
           <img class="user_avatar"
-               src="../assets/imgs/avatar.jpg" />
+               :src="article.user.avatar" />
           <span class="user_name">
-            Seauning
+            {{article.user.name}}
           </span>
         </router-link>
         <i class="iconfont icon-rili"></i>
-        <span>2021-02-03 20:00</span>
+        <span>{{formatTime}}</span>
         <i class="iconfont icon-guankan_guankan"></i>
-        <span>525</span>
+        <span>{{article.views}}</span>
       </div>
-      <div class="body_pic_area">
-        <img src="../assets/imgs/newsbackground.jpg"
+      <div class="body_pic_area"
+           v-if="article.bgPath !== ''">
+        <img :src="article.bgPath"
              alt="">
       </div>
       <div class="body_content_area">
-        <md-editor v-model="text"
+        <md-editor v-model="article.text"
                    previewOnly
                    :theme="theme"></md-editor>
       </div>
       <div class="body_record_area">
         <ul>
-          <li>作者：Seauning</li>
-          <li>发表时间：2021-12-28 21.37</li>
+          <li>作者：{{article.user.name}}</li>
+          <li>发表时间：{{formatTime}}</li>
           <li>版权声明：自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）</li>
           <li>公众号转载：请在文末添加作者公众号二维码</li>
         </ul>
@@ -64,13 +65,51 @@ import MdEditor from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import { Edit } from '@element-plus/icons';
 import { onMounted, ref } from 'vue';
+import { Message, myFormateDate } from '@/utils/tool.js';
+import { getCurrentArticleApi, updateViewsApi } from '@/api/homeApi.js';
 
 export default {
   components: { Edit, MdEditor },
+  props: {
+    id: {
+      type: Number,
+      requeired: true,
+    },
+  },
+  data() {
+    return {
+      article: {
+        type: Object,
+        default: {},
+      },
+    };
+  },
+  methods: {
+    async getCurrentArticle() {
+      const { id } = this.$route.params;
+      const { code, msg, data } = await getCurrentArticleApi(id);
+      if (code !== 0) {
+        return Message({
+          message: msg,
+        });
+      }
+      this.article = data;
+      this.article.views += 1;
+      return true;
+    },
+  },
+  computed: {
+    formatTime() {
+      return myFormateDate(this.article.createdTime);
+    },
+  },
+  unmounted() {
+    // 我们在组件销毁时发起更新观看人数的请求
+    updateViewsApi(this.article.id, this.article.views);
+  },
   setup() {
     // markdown主题
     const theme = ref('light');
-    const text = ref('11111111111111111111111');
     const comment = ref('');
     onMounted(() => {
       window.scrollTo(0, 400);
@@ -78,8 +117,10 @@ export default {
     return {
       comment,
       theme,
-      text,
     };
+  },
+  created() {
+    this.getCurrentArticle();
   },
 };
 </script>
