@@ -24,7 +24,11 @@
         <img src="../assets/imgs/newsbackground.jpg"
              alt="">
       </div>
-      <div class="body_content_area"></div>
+      <div class="body_content_area">
+        <md-editor v-model="text"
+                   previewOnly
+                   :theme="theme"></md-editor>
+      </div>
       <div class="body_record_area">
         <ul>
           <li>作者：Seauning</li>
@@ -56,18 +60,25 @@
 </template>
 
 <script>
+import MdEditor from 'md-editor-v3';
+import 'md-editor-v3/lib/style.css';
 import { Edit } from '@element-plus/icons';
 import { onMounted, ref } from 'vue';
 
 export default {
-  components: { Edit },
+  components: { Edit, MdEditor },
   setup() {
+    // markdown主题
+    const theme = ref('light');
+    const text = ref('11111111111111111111111');
     const comment = ref('');
     onMounted(() => {
       window.scrollTo(0, 400);
     });
     return {
       comment,
+      theme,
+      text,
     };
   },
 };

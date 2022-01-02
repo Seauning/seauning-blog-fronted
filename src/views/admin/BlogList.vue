@@ -141,9 +141,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.blog_list {
-  padding: 0 20px;
-}
 .pagiantion {
   display: flex;
   justify-content: space-around;

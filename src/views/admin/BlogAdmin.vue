@@ -159,18 +159,21 @@ export default {
 
 <style lang="scss" scoped>
 .blog_admin {
+  position: relative;
   height: 100%;
+  overflow: auto;
   background-color: #eaedf1;
+  font-size: 24px;
 }
 .admin_header {
-  height: 10vh;
+  width: 100%;
+  height: 3em;
   padding: 0;
-  line-height: 10vh;
-  color: #fff;
-  font-size: 24px;
   background: linear-gradient(#000000, #434343);
   border-bottom: 1px solid #000;
   box-sizing: border-box;
+  color: #fff;
+  line-height: 3em;
   .left_title {
     margin-left: 10px;
     float: left;
@@ -196,7 +199,8 @@ export default {
   }
 }
 .admin_body {
-  height: 90vh;
+  width: 100%;
+  height: calc(100vh - 3em);
   .left_aside {
     height: 100%;
     display: inline-block;
@@ -226,5 +230,9 @@ export default {
 }
 .admin_main {
   width: 100%;
+  height: 100%;
+  padding: 20px;
+  overflow: auto;
+  box-sizing: border-box;
 }
 </style>

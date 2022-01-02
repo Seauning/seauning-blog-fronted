@@ -76,11 +76,12 @@ export default {
   box-sizing: border-box;
   padding: 0.16rem 0;
   border-bottom: 1px solid #e4e7ed;
+  font-size: 20px;
   .blog_article {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 68.75%;
+    width: 25em;
     height: 100%;
     padding: 0 5px;
     margin-right: 30px;
@@ -89,7 +90,7 @@ export default {
   .img_wrap {
     display: flex;
     align-items: center;
-    width: 31.25%;
+    width: 12em;
     box-sizing: border-box;
     a {
       display: block;
@@ -110,7 +111,7 @@ export default {
   justify-content: space-between;
   .article_content {
     font-family: $ffYahei;
-    margin-bottom: 80px;
+    margin-bottom: 40px;
     .article_title {
       font-size: 26px;
       font-weight: 800;
@@ -185,6 +186,7 @@ export default {
     .blog_article {
       width: 100%;
       margin-right: 0;
+      padding-top: 20px;
       .article_content {
         margin-bottom: 20px;
       }

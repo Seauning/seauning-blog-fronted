@@ -208,10 +208,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.my_detail {
-  padding: 20px;
-}
-
 .user_info {
   display: flex;
   justify-content: space-evenly;

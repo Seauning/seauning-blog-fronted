@@ -19,6 +19,19 @@ export const postUploadBackgroungImgApi = (file) => request({
   method: 'post',
   url: '/bgImg/',
   data: file,
+  headers: {
+    'Content-Type': 'multipart/form-data',
+  },
+});
+
+// 上传文章图片
+export const postUploadArticleImgApi = (file) => request({
+  method: 'post',
+  url: '/articleImg/',
+  data: file,
+  headers: {
+    'Content-Type': 'multipart/form-data',
+  },
 });
 
 // 上传博客

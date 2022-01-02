@@ -21,7 +21,11 @@
         </el-form-item>
         <el-form-item>
           <md-editor v-model="editForm.text"
-                     :theme="theme"></md-editor>
+                     :theme="theme"
+                     :showCodeRowNumber="true"
+                     @onSave="handleSave"
+                     @onHtmlChanged="handleSaveHtml"
+                     @onUploadImg="handleuUploadArticleImg"></md-editor>
         </el-form-item>
         <div class="cl">
           <el-form-item prop="type"
@@ -106,7 +110,9 @@ import {
 } from 'vue';
 import { Message, getArticles } from '@/utils/tool.js';
 import AdminMain from '@/components/layout/AdminMain.vue';
-import { postUploadBackgroungImgApi, postArticleApi, updateArticleApi } from '@/api/adminApi.js';
+import {
+  postUploadBackgroungImgApi, postArticleApi, updateArticleApi, postUploadArticleImgApi,
+} from '@/api/adminApi.js';
 
 export default {
   name: 'BlogEdit',
@@ -203,6 +209,23 @@ export default {
       filelist.value.push({ name: file.name, url: data.url });
       editForm.url = data.url;
     };
+    // 上传文章里的图片
+    const handleuUploadArticleImg = async (files, cb) => {
+      const res = await Promise.all(
+        Array.from(files).map((file) => new Promise((resolve, reject) => {
+          const form = new FormData();
+          form.append('file', file);
+          postUploadArticleImgApi(form).then((resp) => resolve(resp))
+            .catch((error) => reject(error));
+        })),
+      );
+      console.log(res);
+      cb(res.map((item) => item.data.url));
+    };
+    // 保存html
+    const handleSaveHtml = (html) => {
+      console.log(html);
+    };
     // iterators/generators require regenerator-runtime, which is too heavyweight for this guide t
     // o allow them. Separately, loops should be avoided in favor of array iterations
     // 情况编辑表单
@@ -298,6 +321,8 @@ export default {
       handleRemove,
       onBeforeUploadAvatar,
       uploadBackgroundImg,
+      handleuUploadArticleImg,
+      handleSaveHtml,
     };
   },
 };
@@ -317,7 +342,6 @@ export default {
   }
 }
 .blog_edit {
-  padding: 0 20px;
   .blog_form {
     .blog_title {
       float: left;
