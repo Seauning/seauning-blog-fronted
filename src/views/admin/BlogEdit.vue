@@ -146,7 +146,8 @@ export default {
       digest: article.digest || initFormValue.digest,
       text: article.text || initFormValue.text,
       type: article.type ? article.type.name : initFormValue.type,
-      tag: article.tag.length !== 0 ? article.tag[0].name : initFormValue.tag,
+      // 这条判断语句非常重要
+      tag: article.tag && article.tag.length !== 0 ? article.tag[0].name : initFormValue.tag,
       url: article.url || initFormValue.url,
     });
     const uploadRef = ref(null);
