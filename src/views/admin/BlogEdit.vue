@@ -146,7 +146,7 @@ export default {
       digest: article.digest || initFormValue.digest,
       text: article.text || initFormValue.text,
       type: article.type ? article.type.name : initFormValue.type,
-      tag: article.tag ? article.tag[0].name : initFormValue.tag,
+      tag: article.tag.length !== 0 ? article.tag[0].name : initFormValue.tag,
       url: article.url || initFormValue.url,
     });
     const uploadRef = ref(null);
@@ -254,6 +254,7 @@ export default {
         return false;
       }
       if (filelist.value.length > 1) return Message({ message: '只允许上传一张图片' });
+      console.log(editForm);
       // 上传博客内容
       if (JSON.stringify(article) === '{}' || !('id' in article)) { // 表明当前是发布博客
         const { code, msg } = await postArticleApi(editForm);

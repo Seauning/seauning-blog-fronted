@@ -6,7 +6,7 @@
         博客详情
       </h1>
     </div>
-    <div class="blog_detail_body animate__animated animate__slideInRight">
+    <div class="blog_detail_body">
       <div class="body_header">
         <router-link to="#"
                      class="user_link">
@@ -98,7 +98,6 @@ export default {
     async getCurrentArticle() {
       const loading = Loading({
         fullscreen: true,
-        lock: true,
       });
       const { id } = this.$route.params;
       const { code, msg, data } = await getCurrentArticleApi(id);
