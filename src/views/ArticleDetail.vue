@@ -1,5 +1,6 @@
 <template>
-  <div class="main">
+  <div class="main"
+       v-if="'user' in article">
     <div class="blog_detail_header">
       <h1 class="header_content">
         博客详情
@@ -30,14 +31,14 @@
                    previewOnly
                    :theme="theme"></md-editor>
       </div>
-      <div class="body_record_area">
+      <div class="body_record_area cl">
         <ul>
           <li>作者：{{article.user.name}}</li>
           <li>发表时间：{{formatTime}}</li>
           <li>版权声明：自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）</li>
           <li>公众号转载：请在文末添加作者公众号二维码</li>
         </ul>
-        <img src=""
+        <img src="../assets/imgs/mmqrcode1641126628868.png"
              alt="微信">
       </div>
       <div class="body_comment_area">
@@ -64,17 +65,26 @@
 import MdEditor from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import { Edit } from '@element-plus/icons';
-import { onMounted, ref } from 'vue';
-import { Message, myFormateDate } from '@/utils/tool.js';
+import { ref } from 'vue';
+import { Message, myFormateDate, Loading } from '@/utils/tool.js';
 import { getCurrentArticleApi, updateViewsApi } from '@/api/homeApi.js';
 
 export default {
   components: { Edit, MdEditor },
   props: {
     id: {
-      type: Number,
+      type: String,
       requeired: true,
     },
+  },
+  setup() {
+    // markdown主题
+    const theme = ref('light');
+    const comment = ref('');
+    return {
+      comment,
+      theme,
+    };
   },
   data() {
     return {
@@ -86,6 +96,10 @@ export default {
   },
   methods: {
     async getCurrentArticle() {
+      const loading = Loading({
+        fullscreen: true,
+        lock: true,
+      });
       const { id } = this.$route.params;
       const { code, msg, data } = await getCurrentArticleApi(id);
       if (code !== 0) {
@@ -95,6 +109,9 @@ export default {
       }
       this.article = data;
       this.article.views += 1;
+      // 增加观看人数
+      await updateViewsApi(this.article.id, this.article.views);
+      loading.close();
       return true;
     },
   },
@@ -102,22 +119,6 @@ export default {
     formatTime() {
       return myFormateDate(this.article.createdTime);
     },
-  },
-  unmounted() {
-    // 我们在组件销毁时发起更新观看人数的请求
-    updateViewsApi(this.article.id, this.article.views);
-  },
-  setup() {
-    // markdown主题
-    const theme = ref('light');
-    const comment = ref('');
-    onMounted(() => {
-      window.scrollTo(0, 400);
-    });
-    return {
-      comment,
-      theme,
-    };
   },
   created() {
     this.getCurrentArticle();
@@ -216,6 +217,8 @@ export default {
       }
     }
     img {
+      width: 100px;
+      height: 100%;
       float: right;
     }
   }

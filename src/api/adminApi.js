@@ -65,3 +65,10 @@ export const deleteArticleApi = (aid) => request({
   method: 'delete',
   url: `/articles/${aid}/`,
 });
+
+export function logoutApi() {
+  return request({
+    method: 'delete',
+    url: '/logout/',
+  });
+}

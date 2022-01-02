@@ -70,7 +70,7 @@ import { useRouter } from 'vue-router';
 import {
   HomeFilled, Edit, Avatar,
 } from '@element-plus/icons';
-import { getTagTypesApi } from '@/api/adminApi.js';
+import { getTagTypesApi, logoutApi } from '@/api/adminApi.js';
 import { Message, getArticles } from '@/utils/tool.js';
 
 export default {
@@ -136,8 +136,9 @@ export default {
     // 获取博客文章数据
     // let articles = reactive([]);
     // provide('articles', articles);
-    const goHome = (v) => {
+    const goHome = async (v) => {
       if (!v) window.sessionStorage.clear();
+      await logoutApi();
       router.push({
         name: 'Home',
       });
