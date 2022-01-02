@@ -38,7 +38,7 @@
 
 export default {
   name: 'MyPagination',
-  emits: ['getPageSize'],
+  emits: ['getPageSize', 'getCurrentPage'],
   // 如果需要响应式的变量如current，改变如下方法为2的方法
   props: {
     totalSize: {
@@ -52,12 +52,15 @@ export default {
   },
   data() {
     return {
+      totalPage: {
+        type: Number,
+        default: 0,
+      },
+      current: 1,
       disabled: {
         type: Number,
         default: 1,
       },
-      totalPage: this.totalSize / this.pageSize,
-      current: 1,
     };
   },
   /* setup(props, context) {
@@ -87,12 +90,16 @@ export default {
     },
   },
   watch: {
+    totalSize(v) {
+      this.totalPage = Math.ceil(v / this.pageSize);
+    },
     current(newV) {
-      this.$emits('getCurrentPage', newV);
+      this.$emit('getCurrentPage', newV);
     },
   },
   mounted() {
     this.$emit('getPageSize', this.pageSize);
+    this.totalPage = this.totalSize / this.pageSize;
   },
 };
 </script>

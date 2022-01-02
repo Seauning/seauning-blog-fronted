@@ -3,15 +3,15 @@
   <div class="my_card">
     <div class="card_header hover-shadow">
       <span class="title">博客</span>
-      <span>共<span class="number">{{this.articleList.length}}</span>篇</span>
+      <span>共<span class="number">{{articleList.length}}</span>篇</span>
     </div>
     <div class="home_blogs hover-shadow">
-      <blog-article v-for="item in getFixArticles"
+      <blog-article v-for="item in currentArticles"
                     :key="item.id"
                     :article="item"></blog-article>
     </div>
     <div class="card_footer hover-shadow">
-      <my-pagination :totalSize="this.articleList.length"
+      <my-pagination :totalSize="articleList.length"
                      :pageSize="3"
                      @getPageSize="getPageSize"
                      @getCurrentPage="getCurrentPage"></my-pagination>
@@ -27,7 +27,7 @@ import BlogArticle from './BlogArticle.vue';
 
 export default {
   props: {
-    articleList: {
+    articleList: { // 总的文章列表
       type: Array,
       required: true,
     },
@@ -50,7 +50,25 @@ export default {
     return {
       current: 1,
       pageSize: 0,
+      currentArticles: [], // 当前的文章
     };
+  },
+  watch: { // 通过watch对articleList进行深度监听
+    articleList: { // 这里是初始赋值
+      deep: true,
+      handler(v) {
+        this.currentArticles = v.slice(Math.floor(
+          this.current / this.pageSize,
+        ) * this.pageSize, this.pageSize);
+      },
+    },
+    current(newV) {
+      this.current = newV;
+      this.currentArticles = this.articleList.slice(
+        (this.current - 1) * 3,
+        (this.current - 1) * 3 + this.pageSize,
+      );
+    },
   },
   methods: {
     getPageSize(data) {
@@ -58,11 +76,6 @@ export default {
     },
     getCurrentPage(data) {
       this.current = data;
-    },
-  },
-  computed: {
-    getFixArticles() {
-      return this.articleList.slice(3);
     },
   },
   components: {

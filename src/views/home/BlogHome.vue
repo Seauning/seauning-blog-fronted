@@ -26,8 +26,9 @@
         <home-blogs :articleList="articles"></home-blogs>
       </div>
       <div class="right_mess">
-        <home-category></home-category>
-        <home-tag></home-tag>
+        <home-category :types="types"></home-category>
+        <home-tag :tags="tags">
+        </home-tag>
       </div>
     </div>
     <blog-record></blog-record>
@@ -35,11 +36,13 @@
 </template>
 
 <script>
-import { ArrowDownBold, Message } from '@element-plus/icons';
+import { ArrowDownBold } from '@element-plus/icons';
 import {
   ref,
 } from 'vue';
+import { Message } from '@/utils/tool.js';
 import { getAllArticlesApi } from '@/api/homeApi.js';
+import { getTagTypesApi } from '@/api/adminApi.js';
 import HomeBlogs from '@/views/home/HomeBlogs.vue';
 import HomeCategory from '@/views/home/HomeCategory.vue';
 import HomeTag from '@/views/home/HomeTag.vue';
@@ -52,6 +55,8 @@ export default {
   data() {
     return {
       articles: [],
+      tags: [],
+      types: [],
     };
   },
   setup() {
@@ -113,11 +118,24 @@ export default {
         return;
       }
       this.articles = data;
-      this.articles = [...this.articles, ...this.articles];
+    },
+    async getTypeAndTags() {
+      const { code, msg, data } = await getTagTypesApi();
+      if (code !== 0) {
+        return Message({
+          message: msg,
+        });
+      }
+      this.tags = data.tags;
+      // 注意不能直接在data.tags后splice，splice会返回切割后的数组
+      this.tags.splice(0, 1);
+      this.types = data.types;
+      return true;
     },
   },
   created() {
     this.getArticleList();
+    this.getTypeAndTags();
   },
 };
 </script>

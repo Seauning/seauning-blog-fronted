@@ -29,7 +29,8 @@
             <span class="article_views">{{article.views}}</span>
           </span>
         </div>
-        <div class="right_wrap">
+        <div class="right_wrap"
+             v-if="article.tag.length !== 0">
           <router-link to="#"
                        class="a_underline article_tag"
                        v-for="tag in article.tag"
@@ -81,7 +82,9 @@ export default {
     justify-content: space-between;
     width: 68.75%;
     height: 100%;
+    padding: 0 5px;
     margin-right: 30px;
+    box-sizing: border-box;
   }
   .img_wrap {
     display: flex;

@@ -8,10 +8,10 @@
         标签
       </template>
       <template #default>
-        <my-tag v-for="(item, idx) in [1,2,3,4,5]"
-                :key="idx"
-                :utag_class="'my_tag'">Java
-          <span class="tag_number">11</span>
+        <my-tag v-for="item in tags"
+                :key="item.name"
+                :utag_class="'my_tag'">{{item.value}}
+          <span class="tag_number">{{item.count}}</span>
         </my-tag>
       </template>
     </my-card>
@@ -24,6 +24,12 @@ import MyTag from '@/components/MyTag.vue';
 
 export default {
   name: 'HomeCategory',
+  props: {
+    tags: {
+      type: Array,
+      required: true,
+    },
+  },
   components: {
     MyCard,
     MyTag,

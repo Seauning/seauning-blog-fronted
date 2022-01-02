@@ -7,10 +7,10 @@
       <template #default>
         <div class="cate_items">
           <div class="cate_item"
-               v-for="(item, index) in [1,2,3,4,5]"
-               :key="index">学习日志
+               v-for="item in types"
+               :key="item.name">{{item.value}}
             <my-tag :utag_class="'my_tag'">
-              20
+              {{item.count}}
             </my-tag>
           </div>
         </div>
@@ -25,6 +25,12 @@ import MyTag from '@/components/MyTag.vue';
 
 export default {
   name: 'HomeCategory',
+  props: {
+    types: {
+      type: Array,
+      required: true,
+    },
+  },
   components: {
     MyTag,
     MyCard,
