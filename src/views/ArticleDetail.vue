@@ -1,6 +1,6 @@
 <template>
   <div class="main"
-       v-if="'user' in article">
+       v-if="'user' in article.data">
     <div class="blog_detail_header">
       <h1 class="header_content">
         博客详情
@@ -11,29 +11,29 @@
         <router-link to="#"
                      class="user_link">
           <img class="user_avatar"
-               :src="article.user.avatar" />
+               :src="article.data.user.avatar" />
           <span class="user_name">
-            {{article.user.name}}
+            {{article.data.user.name}}
           </span>
         </router-link>
         <i class="iconfont icon-rili"></i>
-        <span>{{formatTime}}</span>
+        <span>{{formatTime()}}</span>
         <i class="iconfont icon-guankan_guankan"></i>
-        <span>{{article.views}}</span>
+        <span>{{article.data.views}}</span>
       </div>
       <div class="body_pic_area"
-           v-if="article.bgPath !== ''">
-        <img :src="article.bgPath"
+           v-if="article.data.bgPath !== ''">
+        <img :src="article.data.bgPath"
              alt="">
       </div>
       <div class="body_content_area">
-        <md-editor v-model="article.text"
+        <md-editor v-model="article.data.text"
                    previewOnly
                    :theme="theme"></md-editor>
       </div>
       <div class="body_record_area cl">
         <ul>
-          <li>作者：{{article.user.name}}</li>
+          <li>作者：{{article.data.user.name}}</li>
           <li>发表时间：{{formatTime}}</li>
           <li>版权声明：自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）</li>
           <li>公众号转载：请在文末添加作者公众号二维码</li>
@@ -62,10 +62,11 @@
 </template>
 
 <script>
+import { useRoute } from 'vue-router';
 import MdEditor from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import { Edit } from '@element-plus/icons';
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { Message, myFormateDate, Loading } from '@/utils/tool.js';
 import { getCurrentArticleApi, updateViewsApi } from '@/api/homeApi.js';
 
@@ -77,50 +78,39 @@ export default {
       requeired: true,
     },
   },
-  setup() {
+  setup () {
     // markdown主题
     const theme = ref('light');
     const comment = ref('');
-    return {
-      comment,
-      theme,
-    };
-  },
-  data() {
-    return {
-      article: {
-        type: Object,
-        default: {},
-      },
-    };
-  },
-  methods: {
-    async getCurrentArticle() {
+    const article = reactive({ data: {} });
+    const route = useRoute();
+    async function getCurrentArticle () {
       const loading = Loading({
         fullscreen: true,
       });
-      const { id } = this.$route.params;
+      const { id } = route.params;
       const { code, msg, data } = await getCurrentArticleApi(id);
       if (code !== 0) {
         return Message({
           message: msg,
         });
       }
-      this.article = data;
-      this.article.views += 1;
+      article.data = data;
+      article.data.views += 1;
       // 增加观看人数
-      await updateViewsApi(this.article.id, this.article.views);
+      await updateViewsApi(article.data.id, article.data.views);
       loading.close();
       return true;
-    },
-  },
-  computed: {
-    formatTime() {
-      return myFormateDate(this.article.createdTime);
-    },
-  },
-  created() {
-    this.getCurrentArticle();
+    }
+    getCurrentArticle();
+    const formatTime = () => myFormateDate(article.data.createdTime);
+
+    return {
+      formatTime,
+      article,
+      comment,
+      theme,
+    };
   },
 };
 </script>

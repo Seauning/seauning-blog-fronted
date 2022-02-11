@@ -1,7 +1,6 @@
 <script setup>
 import { ref, toRefs, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
-import TopNavBar from '@/components/layout/TopNavBar.vue';
 
 const { path } = toRefs(useRoute());
 const TopNavBarIsShow = ref('');

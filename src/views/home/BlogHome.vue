@@ -23,11 +23,11 @@
     </div>
     <div class="home_mess cl">
       <div class="left_mess">
-        <home-blogs :articleList="articles"></home-blogs>
+        <home-blogs :articleList="articles.data"></home-blogs>
       </div>
       <div class="right_mess">
-        <home-category :types="types"></home-category>
-        <home-tag :tags="tags">
+        <home-category :types="types.data"></home-category>
+        <home-tag :tags="tags.data">
         </home-tag>
       </div>
     </div>
@@ -38,7 +38,7 @@
 <script>
 import { ArrowDownBold } from '@element-plus/icons';
 import {
-  ref,
+  ref, reactive, onMounted, watchEffect,
 } from 'vue';
 import { Message } from '@/utils/tool.js';
 import { getAllArticlesApi } from '@/api/homeApi.js';
@@ -52,14 +52,7 @@ export default {
   components: {
     HomeBlogs, HomeCategory, HomeTag, ArrowDownBold,
   },
-  data() {
-    return {
-      articles: [],
-      tags: [],
-      types: [],
-    };
-  },
-  setup() {
+  setup () {
     // 头部标题的ref
     const headerRef = ref(null);
     // 向下滚动
@@ -77,38 +70,8 @@ export default {
         behavior: 'smooth',
       });
     };
-    // let articles = reactive([]);
-    // const getArticleList = async () => {
-    //   const { code, msg, data } = await getAllArticlesApi();
-    //   if (code !== 0) {
-    //     Message({
-    //       message: msg,
-    //       type: 'error',
-    //     });
-    //     return;
-    //   }
-    //   articles = data;
-    // };
-
-    // onBeforeCreate(async () => {
-    //   const { code, msg, data } = await getAllArticlesApi();
-    //   if (code !== 0) {
-    //     Message({
-    //       message: msg,
-    //       type: 'error',
-    //     });
-    //     return;
-    //   }
-    //   articles = reactive(data);
-    // });
-    return {
-      // articles,
-      rollDown,
-      headerRef,
-    };
-  },
-  methods: {
-    async getArticleList() {
+    const articles = reactive({ data: [] });
+    const getArticleList = async () => {
       const { code, msg, data } = await getAllArticlesApi();
       if (code !== 0) {
         Message({
@@ -117,25 +80,36 @@ export default {
         });
         return;
       }
-      this.articles = data;
-    },
-    async getTypeAndTags() {
+      articles.data = reactive(data);
+    };
+    const tags = reactive({ data: [] });
+    const types = reactive({ data: [] });
+    const getTypeAndTags = async () => {
       const { code, msg, data } = await getTagTypesApi();
       if (code !== 0) {
-        return Message({
+        Message({
           message: msg,
+          type: 'error',
         });
+        return;
       }
-      this.tags = data.tags;
+      tags.data = data.tags;
       // 注意不能直接在data.tags后splice，splice会返回切割后的数组
-      this.tags.splice(0, 1);
-      this.types = data.types;
-      return true;
-    },
-  },
-  created() {
-    this.getArticleList();
-    this.getTypeAndTags();
+      tags.data.splice(0, 1);
+      types.data = data.types;
+    };
+    onMounted(() => {
+      getArticleList();
+      getTypeAndTags();
+    });
+    return {
+      articles,
+      tags,
+      types,
+      rollDown,
+      headerRef,
+      getArticleList,
+    };
   },
 };
 </script>

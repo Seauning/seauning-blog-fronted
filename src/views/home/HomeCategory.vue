@@ -20,8 +20,6 @@
 </template>
 
 <script>
-import MyCard from '@/components/MyCard.vue';
-import MyTag from '@/components/MyTag.vue';
 
 export default {
   name: 'HomeCategory',
@@ -30,10 +28,6 @@ export default {
       type: Array,
       required: true,
     },
-  },
-  components: {
-    MyTag,
-    MyCard,
   },
 };
 </script>

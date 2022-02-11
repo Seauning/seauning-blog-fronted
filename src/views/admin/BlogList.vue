@@ -67,13 +67,9 @@ import { Message } from '@element-plus/icons';
 import { useRouter } from 'vue-router';
 import { deleteArticleApi } from '@/api/adminApi.js';
 import { myFormateDate, getArticles } from '@/utils/tool.js';
-import AdminMain from '@/components/layout/AdminMain.vue';
 
 export default {
   name: 'BlogList',
-  components: {
-    AdminMain,
-  },
   setup() {
     // 头部面包屑菜单
     const menuItems = [

@@ -67,6 +67,7 @@ const routes = [
 
 ];
 
+// 创建Hash模式的路由实例
 const router = createRouter({
   history: createWebHashHistory(),
   routes,

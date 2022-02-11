@@ -19,8 +19,6 @@
 </template>
 
 <script>
-import MyCard from '@/components/MyCard.vue';
-import MyTag from '@/components/MyTag.vue';
 
 export default {
   name: 'HomeCategory',
@@ -30,11 +28,6 @@ export default {
       required: true,
     },
   },
-  components: {
-    MyCard,
-    MyTag,
-  },
-
 };
 </script>
 

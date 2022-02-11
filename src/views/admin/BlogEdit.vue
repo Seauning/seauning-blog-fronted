@@ -112,7 +112,6 @@ import {
   inject, onUnmounted, reactive, ref,
 } from 'vue';
 import { Message, getArticles } from '@/utils/tool.js';
-import AdminMain from '@/components/layout/AdminMain.vue';
 import {
   postUploadBackgroungImgApi, postArticleApi, updateArticleApi, postUploadArticleImgApi,
 } from '@/api/adminApi.js';
@@ -120,7 +119,7 @@ import {
 export default {
   name: 'BlogEdit',
   components: {
-    MdEditor, AdminMain, Plus, Delete,
+    MdEditor, Plus, Delete,
   },
   setup() {
     // markdown主题

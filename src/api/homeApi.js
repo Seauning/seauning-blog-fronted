@@ -1,6 +1,6 @@
 import request from '@/utils/axios.js';
 
-export function getAllArticlesApi() {
+export function getAllArticlesApi () {
   const data = request({
     method: 'get',
     url: '/articles/',
@@ -8,14 +8,14 @@ export function getAllArticlesApi() {
   return data;
 }
 
-export function getCurrentArticleApi(id) {
+export function getCurrentArticleApi (id) {
   return request({
     method: 'get',
     url: `/article/${id}`,
   });
 }
 
-export function updateViewsApi(aid, views) {
+export function updateViewsApi (aid, views) {
   return request({
     method: 'post',
     url: '/article/',

@@ -54,14 +54,12 @@ import { UploadFilled } from '@element-plus/icons';
 import {
   getCurrentInstance, ref, inject,
 } from 'vue';
-import AdminMain from '@/components/layout/AdminMain.vue';
 import { postUploadAvatarApi } from '@/api/registerApi.js';
 import { updateUserInfoApi } from '@/api/adminApi.js';
 
 export default {
   name: 'MyDetail',
   components: {
-    AdminMain,
     UploadFilled,
   },
   setup() {
