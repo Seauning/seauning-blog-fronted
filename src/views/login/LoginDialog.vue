@@ -75,7 +75,7 @@ import {
 } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { getUUID } from '@/utils/tool';
+import { getUUID, Message } from '@/utils/tool';
 import { getImgCodeApi, postCheckUserApi } from '@/api/loginApi.js';
 
 export default {
@@ -83,7 +83,7 @@ export default {
   props: {
     formRules: {},
   },
-  setup() {
+  setup () {
     // 获取图片的次数
     let getImgCounts = 0;
     // 禁止获取图像验证码的倒计时
@@ -96,8 +96,7 @@ export default {
     const { proxy } = getCurrentInstance();
     // 获取当前的router和vuex实例
     // (需要注意的是这三个方法都只能再setup中使用不能在函数体中使用)
-    const store = useStore();
-    console.log(store);
+    // const store = useStore();
     const router = useRouter();
     // 禁止获取图片
     const changeRegisterVisible = inject('changeRegisterVisible');
@@ -115,7 +114,7 @@ export default {
     // 开启禁止获取图片验证码的计时器
     const startForbidGetImgTimer = () => {
       if (forbidGetTimer != null) { clearTimeout(forbidGetTimer); }
-      function reset() {
+      function reset () {
         getImgCounts = 0 && clearTimeout(forbidGetTimer);
       }
       // 每3秒清空一次点击次数
@@ -149,7 +148,13 @@ export default {
       flushValidImgTimer = setInterval(getVerifyCode, 60000);
     };
     // 渲染完毕开启自动刷新的定时器
-    onMounted(() => { startFlushValidImgTimer(); });
+    onMounted(() => {
+      startFlushValidImgTimer();
+      Message({
+        type: 'warning',
+        message: '请使用默认账号登录！\n账号：admin，密码：123456'
+      })
+    });
     // 需要在组件销毁的时候关闭所有计时器
     onUnmounted(() => { clearTimeout(forbidGetTimer); clearInterval(flushValidImgTimer); });
     // 登录

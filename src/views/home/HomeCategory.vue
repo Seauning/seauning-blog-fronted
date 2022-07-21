@@ -34,6 +34,8 @@ export default {
 
 <style lang="scss" scoped>
 .home_cate {
+  min-width: 240px;
+
   .cate_items {
     border: 1px solid rgb(34 36 38 / 15%);
     border-radius: 0.2em;
@@ -61,8 +63,6 @@ export default {
 .cate_item {
   display: flex;
   justify-content: space-between;
-  .cate_item_text {
-  }
 
   .cate_item_label {
     text-align: right;

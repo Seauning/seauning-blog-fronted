@@ -60,7 +60,7 @@ export default {
     },
   },
   computed: {
-    formateDate() {
+    formateDate () {
       return myFormateDate(this.article.createdTime);
     },
   },

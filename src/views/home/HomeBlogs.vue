@@ -1,5 +1,7 @@
 <template>
   <!-- 博客动态 -->
+  <!-- <div class="my_card"
+       v-if="articleList.length"> -->
   <div class="my_card">
     <div class="card_header hover-shadow">
       <span class="title">博客</span>
@@ -46,7 +48,7 @@ export default {
       getPageSize,
     };
   }, */
-  data() {
+  data () {
     return {
       current: 1,
       pageSize: 0,
@@ -56,13 +58,13 @@ export default {
   watch: { // 通过watch对articleList进行深度监听
     articleList: { // 这里是初始赋值
       deep: true,
-      handler(v) {
+      handler (v) {
         this.currentArticles = v.slice(Math.floor(
           this.current / this.pageSize,
         ) * this.pageSize, this.pageSize);
       },
     },
-    current(newV) {
+    current (newV) {
       this.current = newV;
       this.currentArticles = this.articleList.slice(
         (this.current - 1) * 3,
@@ -71,10 +73,10 @@ export default {
     },
   },
   methods: {
-    getPageSize(data) {
+    getPageSize (data) {
       this.pageSize = data;
     },
-    getCurrentPage(data) {
+    getCurrentPage (data) {
       this.current = data;
     },
   },
@@ -86,6 +88,7 @@ export default {
 
 <style lang="scss" scoped>
 .my_card {
+  min-width: 400px;
   border-radius: 5px;
   background-color: #fff;
   .card_header {
@@ -112,17 +115,17 @@ export default {
   }
 }
 
-@media screen and(max-width:746px) {
-  .my_card {
-    width: 100%;
-    .card_header {
-      padding: 0.3rem;
-    }
-    .home_blogs {
-      padding: 0 0.4rem 0 0.4rem;
-    }
-  }
-}
+// @media screen and(max-width:746px) {
+//   .my_card {
+//     width: 100%;
+//     .card_header {
+//       padding: 0.3rem;
+//     }
+//     .home_blogs {
+//       padding: 0 0.4rem 0 0.4rem;
+//     }
+//   }
+// }
 
 .card_footer {
   padding: 0.1rem;

@@ -51,7 +51,7 @@ export default {
 
 .se_card {
   font-size: 16px;
-  max-width: 30em;
+  max-width: 24em;
   width: 100%;
   margin: 0 auto 20px;
   font-family: 'Lato';

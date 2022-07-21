@@ -1,7 +1,8 @@
 import Axios from 'axios';
 import { Message } from './tool';
 
-const baseURL = 'http://localhost:8082/api';
+const baseURL = 'http://www.seauning.top/api';
+// const baseURL = 'http://localhost:8082/api';
 const axios = Axios.create({
   baseURL,
   timeout: 5000, // 请求超时 5s
@@ -50,7 +51,7 @@ axios.interceptors.response.use(
 );
 
 // 封装axios
-function request(http) {
+function request (http) {
   return new Promise((resolve, reject) => {
     // 此处的.then属于axios
     axios(http).then((res) => {

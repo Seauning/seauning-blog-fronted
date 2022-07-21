@@ -33,6 +33,7 @@ export default {
 
 <style lang="scss" scoped>
 .home_tag {
+  min-width: 240px;
   font-family: Lato;
   font-weight: 600;
 }

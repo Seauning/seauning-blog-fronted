@@ -21,7 +21,7 @@
         </el-icon>
       </div>
     </div>
-    <div class="home_mess cl">
+    <div class="home_mess">
       <div class="left_mess">
         <home-blogs :articleList="articles.data"></home-blogs>
       </div>
@@ -38,7 +38,7 @@
 <script>
 import { ArrowDownBold } from '@element-plus/icons';
 import {
-  ref, reactive, onMounted, watchEffect,
+  ref, reactive, onMounted,
 } from 'vue';
 import { Message } from '@/utils/tool.js';
 import { getAllArticlesApi } from '@/api/homeApi.js';
@@ -100,6 +100,7 @@ export default {
     };
     onMounted(() => {
       getArticleList();
+      console.log(articles.data.length)
       getTypeAndTags();
     });
     return {
@@ -179,34 +180,33 @@ export default {
 .home_mess {
   padding-top: 105vh;
   padding-bottom: 0;
+  padding-left: 80px;
+  padding-right: 80px;
+  display: flex;
+  justify-content: space-evenly;
   .left_mess {
-    float: left;
-    width: 68%;
-    padding-left: 0.7rem;
-    box-sizing: border-box;
+    margin-left: 10px;
+    flex: 3 1 auto;
   }
   .right_mess {
-    float: right;
-    width: 32%;
-    padding: 0 30px;
-    box-sizing: border-box;
+    flex: 1 5 auto;
+    margin-left: 10px;
   }
 }
 
 @media screen and(max-width:746px) {
   .home_mess {
-    padding-left: 20px;
-    padding-right: 20px;
+    display: block;
+    padding-left: 40px;
+    padding-right: 40px;
     .left_mess {
-      float: none;
-      width: 100%;
-      padding-left: 0;
+      max-width: 100%;
+      margin-left: 0;
     }
     .right_mess {
-      float: none;
-      width: 100%;
+      max-width: 100%;
+      margin-left: 0;
       margin-top: 20px;
-      margin-right: 0;
     }
   }
 }

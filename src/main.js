@@ -1,7 +1,6 @@
 import { createApp } from 'vue';
 // 动态背景
 import Particles from 'particles.vue3';
-// 引入lodash
 import App from './App.vue';
 // 引入router
 import router from './router/index';

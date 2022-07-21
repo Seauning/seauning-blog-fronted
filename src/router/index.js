@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
 
 // 路由懒加载
 // 将 import 组件 from '路径'替换成如下格式
@@ -61,15 +61,16 @@ const routes = [
   },
   {
     path: '/:catchAll(.*)', // Vue3需要使用这种方式来匹配所有路由
-    name: '404',
-    component: NotFound,
+    // name: '404',
+    // component: NotFound,
+    redirect: '/home'
   },
 
 ];
 
 // 创建Hash模式的路由实例
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes,
 });
 
