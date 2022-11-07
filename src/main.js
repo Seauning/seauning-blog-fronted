@@ -13,6 +13,8 @@ import { Message } from './utils/tool';
 // app.config.globalProperties.$http = axios;
 // 引入normalize.css重置浏览器样式
 import '@/assets/css/normalize.css';
+// 引入 iconfont.js
+import '@/assets/js/iconfont.js'
 // 引入全局样式
 import '@/assets/css/global.css';
 // 引入字体图标
