@@ -88,7 +88,7 @@ export default {
 
 <style lang="scss" scoped>
 .my_card {
-  min-width: 400px;
+  min-width: 300px;
   border-radius: 5px;
   background-color: #fff;
   .card_header {

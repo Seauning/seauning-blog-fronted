@@ -50,7 +50,7 @@ export default {
       default: 3,
     },
   },
-  data() {
+  data () {
     return {
       totalPage: {
         type: Number,
@@ -82,7 +82,7 @@ export default {
     };
   }, */
   methods: {
-    changePage(v) {
+    changePage (v) {
       if ((v < 0 && this.current > 1 && this.current <= this.totalPage)
         || (v > 0 && this.current > 0 && this.current < this.totalPage)) {
         this.current += v;
@@ -90,14 +90,14 @@ export default {
     },
   },
   watch: {
-    totalSize(v) {
+    totalSize (v) {
       this.totalPage = Math.ceil(v / this.pageSize);
     },
-    current(newV) {
+    current (newV) {
       this.$emit('getCurrentPage', newV);
     },
   },
-  mounted() {
+  mounted () {
     this.$emit('getPageSize', this.pageSize);
     this.totalPage = this.totalSize / this.pageSize;
   },
@@ -173,7 +173,7 @@ export default {
   }
 }
 
-@media screen and(max-width:1220px) {
+@media screen and (max-width: 1220px) {
   .blog_pagination {
     font-size: 25px;
   }
@@ -182,7 +182,7 @@ export default {
   }
 }
 
-@media screen and(max-width:724px) {
+@media screen and (max-width: 724px) {
   .blog_pagination {
     font-size: 20px;
   }

@@ -58,7 +58,9 @@ export default {
   }
   .item_link {
     position: relative;
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 0.1rem 0.2rem 0 0.2rem;
     color: $themecolor;
     .iconfont {

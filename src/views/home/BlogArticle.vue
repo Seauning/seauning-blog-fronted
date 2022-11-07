@@ -179,7 +179,7 @@ export default {
   }
 }
 
-@media screen and(max-width:746px) {
+@media screen and (max-width: 746px) {
   .blog_item {
     flex-direction: column-reverse;
     justify-content: center;

@@ -194,7 +194,7 @@ export default {
   }
 }
 
-@media screen and(max-width:746px) {
+@media screen and (max-width: 746px) {
   .home_mess {
     display: block;
     padding-left: 40px;
